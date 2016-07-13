@@ -7,6 +7,6 @@
 using namespace std;
 
 namespace AER {
-	void GetWOEID(string city);
-	void GetWeatherData(int WOEID);
+	void GetWOEID(string location);
+	void GetWeatherData(double lat, double lon);
 }

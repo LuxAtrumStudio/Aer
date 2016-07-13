@@ -9,22 +9,18 @@
 #include "Conscientia.h"
 #include "Aer.h"
 
-void AER::GetWOEID(string city)
+void AER::GetWOEID(string location)
 {
-	ofstream transfer("TransferData.txt");
-	if (transfer.is_open()) {
-		transfer << city;
-		transfer.close();
-	}
-	system("GetWOEID.py");
+	vector<string> scriptData = {
+		"", "http://where.yahooapis.com/v1/places.q(" + location + ")?appid=[dj0yJmk9T2tDdFJ3bHlBa0ZyJmQ9WVdrOVdHdGlUemxWTnpBbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD1kOQ--]" + "&format=json", "WOEIDData.json"
+	};
+	CONCERO::RunScript(scriptData);
 }
 
-void AER::GetWeatherData(int WOEID)
+void AER::GetWeatherData(double lat, double lon)
 {
-	ofstream transfer("TransferData.txt");
-	if (transfer.is_open()) {
-		transfer << 12795568;
-		transfer.close();
-	}
-	system("GetData.py");
+	vector<string> scriptData = {
+		"", "https://api.forecast.io/forecast/9c9c48f9ab5717ed899e8b6d730883c6/" + to_string(lat) + "," + to_string(lon), "WeatherData.json"
+	};
+	CONCERO::RunScript(scriptData);
 }

@@ -34,14 +34,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GetData.py">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="GetWOEID.py">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="GetPage.py">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="ProgramData.lux">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>

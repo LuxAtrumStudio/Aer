@@ -1,5 +1,5 @@
 #include <iostream>
-#include <Python.h>
+#include <ctime>
 #include "Conscientia.h"
 #include "Aer.h"
 using namespace std;
@@ -10,13 +10,11 @@ int main() {
 	cout << ">>Gathering Location Data\n";
 	//AER::GetWOEID("RENO");
 	cout << ">>Gathering Forcast Data\n";
-	//AER::GetWeatherData(0);
-	cout << ">>Data Gathering Compleated\n>>Begining Program\n\n\n";
-	vector<string> scriptData = {
-		"", "https://api.forecast.io/forecast/9c9c48f9ab5717ed899e8b6d730883c6/39.70866,-119.699341", "WeatherOut.json"
-	};
-	CONCERO::RunScript(scriptData);
-	while (1);
+	//AER::GetWeatherData(39.70866, -119.699341);
+	cout << ">>Data Gathering Compleated\n>>Begining Program\n";
+	time_t timea;
+	ctime(&timea);
+	cout << timea << endl;
 	CONSCIENTIA::InitializeConscientia();
 	CONSCIENTIA::Gchar();
 	CONSCIENTIA::TerminateConscientia();

@@ -801,7 +801,6 @@ namespace CONCERO {
 		else {
 			LOGGING::LogError("Running python scripts after Conscientia has been initialized is prohibited", "Conscientia.cpp/CONCERO/RunScript");
 		}
-		cout << "Ran Script\n";
 	}
 	void InterpretJSON(string file)
 	{
@@ -927,5 +926,13 @@ namespace CONCERO {
 			action = false;
 		}
 		return (newLevel);
+	}
+	JSONFile GetJSONFile(string name)
+	{
+		for (unsigned a = 0; a < loadedJSONFiles.size(); a++) {
+			if (loadedJSONFiles[a].variables[0].name == name) {
+				return(loadedJSONFiles[a]);
+			}
+		}
 	}
 }

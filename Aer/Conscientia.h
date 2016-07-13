@@ -120,4 +120,5 @@ namespace CONCERO {
 	void RunScript(vector<string> scriptData);
 	void InterpretJSON(string file);
 	subVar ReadVar(string name, string raw);
+	JSONFile GetJSONFile(string name);
 }
