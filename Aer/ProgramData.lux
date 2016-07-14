@@ -1,5 +1,5 @@
 #DATAFILE
-int lastUpdate 1468471608
+int lastUpdate 1468519258
 vector string locations RENO LONDON
-vector double coords 39.5363 -119.83 51.5077 -0.12797
+vector double coords 39.536270 -119.830482 51.507702 -0.127970
 vector string newLocations

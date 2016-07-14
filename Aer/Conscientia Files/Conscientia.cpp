@@ -487,7 +487,6 @@ string CONSCIENTIA::Menu(string menuFileDirectory, int posX, int posY, int sizeX
 	}
 	return("");
 }
-
 void CONSCIENTIA::DisplayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem) {
 	CClearWindow();
 	string v, h, i, line;

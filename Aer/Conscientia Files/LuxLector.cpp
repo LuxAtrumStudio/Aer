@@ -239,18 +239,18 @@ void LUXLECTOR::SaveDataFile(string fileDirectory, dataFile outData)
 		}
 		outputData << outData.data[a].name;
 		if (outData.data[a].type == "int") {
-			outputData << " " << outData.data[a].intValue;
+			outputData << " " << to_string(outData.data[a].intValue);
 		}
 		if (outData.data[a].type == "string") {
-			outputData << " " << outData.data[a].intValue;
+			outputData << " " << outData.data[a].stringValue;
 		}
 		if (outData.data[a].type == "double") {
-			outputData << " " << outData.data[a].intValue;
+			outputData << " " << to_string(outData.data[a].doubleValue);
 		}
 		if (outData.data[a].type == "vector") {
 			if (outData.data[a].typeTwo == "int") {
 				for (unsigned b = 0; b < outData.data[a].intVectorValue.size(); b++) {
-					outputData << " " << outData.data[a].intVectorValue[b];
+					outputData << " " << to_string(outData.data[a].intVectorValue[b]);
 				}
 			}
 			if (outData.data[a].typeTwo == "string") {
@@ -260,7 +260,7 @@ void LUXLECTOR::SaveDataFile(string fileDirectory, dataFile outData)
 			}
 			if (outData.data[a].typeTwo == "double") {
 				for (unsigned b = 0; b < outData.data[a].doubleVectorValue.size(); b++) {
-					outputData << " " << outData.data[a].doubleVectorValue[b];
+					outputData << " " << to_string(outData.data[a].doubleVectorValue[b]);
 				}
 			}
 		}

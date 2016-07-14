@@ -8,9 +8,9 @@ using namespace std;
 int main() {
 	LOGGING::InitializeLogging();
 	AER::ProgramStartUp();
-	//CONSCIENTIA::InitializeConscientia();
-	//CONSCIENTIA::Gchar();
-	//CONSCIENTIA::TerminateConscientia();
+	CONSCIENTIA::InitializeConscientia();
+	AER::RunProgram();
+	CONSCIENTIA::TerminateConscientia();
 	LOGGING::TerminateLogging();
 	return(1);
 }
