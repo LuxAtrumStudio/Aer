@@ -14,6 +14,7 @@ int currentLocation = 0;
 bool day = true;
 dataFile updateData;
 string locationData, weatherData;
+int currentForcast = 0, maxForcast = 0;
 
 void AER::GetWOEID(string location)
 {
@@ -143,7 +144,24 @@ void AER::DrawData()
 		line = ConvertVartName(currentData.vars[a].name) + ": " + ConvertVar(currentData.vars[a]);
 		CONSCIENTIA::FMPrint("Current Weather Data", 1, a + 1, line);
 	}
-
+	/*Forcasted Data*/
+	subVar selectedType;
+	subVar selectedData;
+	if (day == true) {
+		selectedType = CONCERO::GetVariable("daily", weatherData);
+		selectedData = selectedType.vars[2 + currentForcast];
+		maxForcast = selectedType.vars.size() - 3;
+	}
+	else {
+		selectedType = CONCERO::GetVariable("hourly", weatherData);
+		selectedData = selectedType.vars[2 + currentForcast];
+		maxForcast = selectedType.vars.size() - 3;
+	}
+	for (unsigned a = 0; a < selectedData.vars.size(); a++) {
+		line = "";
+		line = ConvertVartName(selectedData.vars[a].name) + ": " + ConvertVar(selectedData.vars[a]);
+		CONSCIENTIA::FMPrint("Forcasted Weather Data", 1, a + 1, line);
+	}
 	/*Update*/
 	CONSCIENTIA::DrawBorder(1);
 	CONSCIENTIA::DrawBorder(2);
@@ -263,10 +281,10 @@ string AER::ConvertVar(subVar var)
 		int bearing = (int)((var.intVar / 22.5) + 0.5);
 		variable = bearings[bearing % 16];
 	}
-	else if (var.name == "precipIntensity") {
+	else if (var.name == "precipIntensity" || var.name == "precipIntensityMax") {
 		variable = var.strVar + " in/hr";
 	}
-	else if (var.name == "precipProbability" || var.name == "humidity" || var.name == "cloudCover") {
+	else if (var.name == "precipProbability" || var.name == "humidity" || var.name == "cloudCover" || var.name == "moonPhase") {
 		if (var.strVar == "0") {
 			variable = "0%";
 		}
@@ -274,7 +292,8 @@ string AER::ConvertVar(subVar var)
 			variable = to_string((var.doubleVar * (double)100)) + "%";
 		}
 	}
-	else if (var.name == "temperature" || var.name == "apparentTemperature" || var.name == "dewPoint") {
+	else if (var.name == "temperature" || var.name == "apparentTemperature" || var.name == "dewPoint" || var.name == "temperatureMin" || var.name == "temperatureMax" ||
+		var.name == "apparentTemperatureMax" || var.name == "apparentTemperatureMin") {
 		variable = var.strVar + char(248) + "F";
 	}
 	else if (var.name == "windSpeed") {
@@ -285,6 +304,21 @@ string AER::ConvertVar(subVar var)
 	}
 	else if (var.name == "ozone") {
 		variable = var.strVar + " DU";
+	}
+
+	else if (var.name == "sunriseTime" || var.name == "sunsetTime") {
+		time_t dataTime = (time_t)var.intVar;
+		int offset = CONCERO::GetIntVariable("offset", weatherData);
+		dataTime = dataTime + (offset * 3600);
+		tm dataTM = *gmtime(&dataTime);
+		variable = GetTime(dataTM, true, true);
+	}
+	else if (var.name == "temperatureMinTime" || var.name == "temperatureMaxTime" || var.name == "apparentTemperatureMinTime" || var.name == "apparentTemperatureMaxTime") {
+		time_t dataTime = (time_t)var.intVar;
+		int offset = CONCERO::GetIntVariable("offset", weatherData);
+		dataTime = dataTime + (offset * 3600);
+		tm dataTM = *gmtime(&dataTime);
+		variable = GetTime(dataTM, true, false);
 	}
 	else {
 		variable = var.strVar;
@@ -304,12 +338,43 @@ void AER::RunProgram()
 	int input = -1;
 	SetWindowLayout();
 	LoadCurrentData();
+	bool update = true;
 	while (running == true) {
-		DrawData();
-		CONSCIENTIA::Update();
+		if (update == true) {
+			update = false;
+			DrawData();
+			CONSCIENTIA::Update();
+		}
 		input = CONSCIENTIA::Gint();
 		if (input == 27) {
 			running = false;
+			update = true;
+		}
+		if (input == 97 && day == true) {
+			update = true;
+			day = false;
+		}
+		if (input == 100 && day == false) {
+			update = true;
+			day = true;
+		}
+		if (input == 119 && currentForcast > 0) {
+			update = true;
+			currentForcast--;
+		}
+		if (input == 115 && currentForcast < maxForcast) {
+			update = true;
+			currentForcast++;
+		}
+		if (input == 113 && currentLocation > 0) {
+			update = true;
+			currentLocation--;
+			LoadCurrentData();
+		}
+		if (input == 101 && currentLocation < updateData.data[1].stringVectorValue.size() - 1) {
+			update = true;
+			currentLocation++;
+			LoadCurrentData();
 		}
 	}
 }

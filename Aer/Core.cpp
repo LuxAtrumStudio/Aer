@@ -6,6 +6,7 @@
 using namespace std;
 
 int main() {
+	_getch();
 	LOGGING::InitializeLogging();
 	AER::ProgramStartUp();
 	CONSCIENTIA::InitializeConscientia();
