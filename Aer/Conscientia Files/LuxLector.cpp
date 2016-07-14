@@ -13,6 +13,7 @@ dataFile LUXLECTOR::LoadDataFile(string fileDirectory)
 {
 	luxCode rawCode = GetRawData(2, fileDirectory);
 	dataFile newData;
+	newData.name = fileDirectory;
 	if (rawCode.lines[0] == "-1") {
 		LOGGING::LogError(fileDirectory + " contains the incorrect file designation", "LuxLector.cpp/LUXLECTOR/LoadDataFile");
 		return(newData);
@@ -23,21 +24,20 @@ dataFile LUXLECTOR::LoadDataFile(string fileDirectory)
 		readTypeTwo = false;
 		readName = false;
 		readValue = false;
-		string type, typeTwo;
-		string name, value;
+		string value;
 		string currentLine;
 		currentLine = rawCode.lines[a];
 		dataVariable newVariable;
 		for (unsigned b = 0; b < rawCode.lines[a].size(); b++) {
 			if (currentLine[b] != ' ') {
 				if (readType == true) {
-					type = type + currentLine[b];
+					newVariable.type = newVariable.type + currentLine[b];
 				}
 				if (readTypeTwo == true) {
-					typeTwo = typeTwo + currentLine[b];
+					newVariable.typeTwo = newVariable.typeTwo + currentLine[b];
 				}
 				if (readName == true) {
-					name = name + currentLine[b];
+					newVariable.name = newVariable.name + currentLine[b];
 				}
 				if (readValue == true) {
 					value = value + currentLine[b];
@@ -45,7 +45,7 @@ dataFile LUXLECTOR::LoadDataFile(string fileDirectory)
 			}
 			if (currentLine[b] == ' ') {
 				if (readType == true) {
-					if (type == "vector") {
+					if (newVariable.type == "vector") {
 						readTypeTwo = true;
 					}
 					else {
@@ -60,58 +60,59 @@ dataFile LUXLECTOR::LoadDataFile(string fileDirectory)
 				else if (readName == true) {
 					readValue = true;
 					readName = false;
-					newVariable.name = name;
 				}
 				else if (readValue == true) {
-					if (type == "vector") {
-						if (typeTwo == "int") {
+					if (newVariable.type == "vector") {
+						if (newVariable.typeTwo == "int") {
 							newVariable.intVectorValue.push_back(stoi(value));
 						}
-						if (typeTwo == "string") {
+						if (newVariable.typeTwo == "string") {
 							newVariable.stringVectorValue.push_back(value);
 						}
-						if (typeTwo == "double") {
+						if (newVariable.typeTwo == "double") {
 							newVariable.doubleVectorValue.push_back(stod(value));
 						}
 						value = "";
 					}
 					else {
 						readValue = false;
-						if (type == "int") {
+						if (newVariable.type == "int") {
 							newVariable.intValue = stoi(value);
 						}
-						if (type == "string") {
+						if (newVariable.type == "string") {
 							newVariable.stringValue = value;
 						}
-						if (type == "double") {
+						if (newVariable.type == "double") {
 							newVariable.doubleValue = stod(value);
 						}
 					}
 				}
 			}
 		}
-		if (type == "vector") {
-			if (typeTwo == "int") {
-				newVariable.intVectorValue.push_back(stoi(value));
+		if (value.size() > 0) {
+			if (newVariable.type == "vector") {
+				if (newVariable.typeTwo == "int") {
+					newVariable.intVectorValue.push_back(stoi(value));
+				}
+				if (newVariable.typeTwo == "string") {
+					newVariable.stringVectorValue.push_back(value);
+				}
+				if (newVariable.typeTwo == "double") {
+					newVariable.doubleVectorValue.push_back(stod(value));
+				}
+				value = "";
 			}
-			if (typeTwo == "string") {
-				newVariable.stringVectorValue.push_back(value);
-			}
-			if (typeTwo == "double") {
-				newVariable.doubleVectorValue.push_back(stod(value));
-			}
-			value = "";
-		}
-		else {
-			readValue = false;
-			if (type == "int") {
-				newVariable.intValue = stoi(value);
-			}
-			if (type == "string") {
-				newVariable.stringValue = value;
-			}
-			if (type == "double") {
-				newVariable.doubleValue = stod(value);
+			else {
+				readValue = false;
+				if (newVariable.type == "int") {
+					newVariable.intValue = stoi(value);
+				}
+				if (newVariable.type == "string") {
+					newVariable.stringValue = value;
+				}
+				if (newVariable.type == "double") {
+					newVariable.doubleValue = stod(value);
+				}
 			}
 		}
 		newData.data.push_back(newVariable);
@@ -224,4 +225,44 @@ luxCode LUXLECTOR::GetRawData(int fileType, string fileDirectory)
 		rawCode.lines[a] = cleanLine;
 	}
 	return(rawCode);
+}
+
+void LUXLECTOR::SaveDataFile(string fileDirectory, dataFile outData)
+{
+	ofstream outputData(fileDirectory);
+	outputData << "#DATAFILE";
+	for (unsigned a = 0; a < outData.data.size(); a++) {
+		outputData << "\n";
+		outputData << outData.data[a].type << " ";
+		if (outData.data[a].type == "vector") {
+			outputData << outData.data[a].typeTwo << " ";
+		}
+		outputData << outData.data[a].name;
+		if (outData.data[a].type == "int") {
+			outputData << " " << outData.data[a].intValue;
+		}
+		if (outData.data[a].type == "string") {
+			outputData << " " << outData.data[a].intValue;
+		}
+		if (outData.data[a].type == "double") {
+			outputData << " " << outData.data[a].intValue;
+		}
+		if (outData.data[a].type == "vector") {
+			if (outData.data[a].typeTwo == "int") {
+				for (unsigned b = 0; b < outData.data[a].intVectorValue.size(); b++) {
+					outputData << " " << outData.data[a].intVectorValue[b];
+				}
+			}
+			if (outData.data[a].typeTwo == "string") {
+				for (unsigned b = 0; b < outData.data[a].stringVectorValue.size(); b++) {
+					outputData << " " << outData.data[a].stringVectorValue[b];
+				}
+			}
+			if (outData.data[a].typeTwo == "double") {
+				for (unsigned b = 0; b < outData.data[a].doubleVectorValue.size(); b++) {
+					outputData << " " << outData.data[a].doubleVectorValue[b];
+				}
+			}
+		}
+	}
 }

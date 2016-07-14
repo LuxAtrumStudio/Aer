@@ -168,3 +168,90 @@ JSONFile CONCERO::GetJSONFile(string name)
 		}
 	}
 }
+
+subVar CONCERO::LocateVariable(string varName, subVar file)
+{
+	subVar result, check;
+	result.name == "NULL";
+	if (varName == file.name) {
+		return(file);
+	}
+	for (unsigned a = 0; a < file.vars.size(); a++) {
+		check = LocateVariable(varName, file.vars[a]);
+		if (check.name == varName) {
+			result = check;
+			return(result);
+		}
+	}
+	return (result);
+}
+
+subVar CONCERO::GetVariable(string varName, string JSONName)
+{
+	subVar result;
+	JSONFile file = GetJSONFile(JSONName);
+	for (unsigned a = 0; a < file.variables.size(); a++) {
+		result = LocateVariable(varName, file.variables[a]);
+	}
+	if (result.name == "NULL") {
+		result.intVar = NULL;
+		result.doubleVar = NULL;
+		result.strVar = "";
+		result.vars.clear();
+	}
+	return (result);
+}
+
+int CONCERO::GetIntVariable(string varName, string JSONName)
+{
+	int value;
+	JSONFile file = GetJSONFile(JSONName);
+	subVar variable;
+	for (unsigned a = 0; a < file.variables.size(); a++) {
+		variable = LocateVariable(varName, file.variables[a]);
+	}
+	if (variable.name == "NULL") {
+		variable.intVar = NULL;
+		variable.doubleVar = NULL;
+		variable.strVar = "";
+		variable.vars.clear();
+	}
+	value = variable.intVar;
+	return (value);
+}
+
+string CONCERO::GetStringVariable(string varName, string JSONName)
+{
+	string value;
+	JSONFile file = GetJSONFile(JSONName);
+	subVar variable;
+	for (unsigned a = 0; a < file.variables.size(); a++) {
+		variable = LocateVariable(varName, file.variables[a]);
+	}
+	if (variable.name == "NULL") {
+		variable.intVar = NULL;
+		variable.doubleVar = NULL;
+		variable.strVar = "";
+		variable.vars.clear();
+	}
+	value = variable.strVar;
+	return (value);
+}
+
+double CONCERO::GetDoubleVariable(string varName, string JSONName)
+{
+	double value;
+	JSONFile file = GetJSONFile(JSONName);
+	subVar variable;
+	for (unsigned a = 0; a < file.variables.size(); a++) {
+		variable = LocateVariable(varName, file.variables[a]);
+	}
+	if (variable.name == "NULL") {
+		variable.intVar = NULL;
+		variable.doubleVar = NULL;
+		variable.strVar = "";
+		variable.vars.clear();
+	}
+	value = variable.doubleVar;
+	return (value);
+}

@@ -26,6 +26,7 @@ struct menuHierarchy {
 struct dataVariable
 {
 	string name;
+	string type, typeTwo;
 	int intValue;
 	string stringValue;
 	double doubleValue;
@@ -43,4 +44,6 @@ namespace LUXLECTOR {
 	dataFile LoadDataFile(string fileDirectory);
 	menuHierarchy LoadHierarchyFile(string fileDirectory);
 	luxCode GetRawData(int fileType, string fileDirectory);
+
+	void SaveDataFile(string fileDirectory, dataFile outData);
 }
