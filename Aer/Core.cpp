@@ -1,10 +1,13 @@
 #include <iostream>
-#include <ctime>
-#include "Conscientia.h"
+#include <time.h>
+#include <conio.h>
+#include "Conscientia Files\Conscientia Headers.h"
 #include "Aer.h"
 using namespace std;
 
 int main() {
+	LOGGING::InitializeLogging();
+	AER::ProgramStartUp();
 	cout << "Loading Weather Data\n";
 	cout << "Depending on Internet Conection This May Take Up To Minute or more\n";
 	cout << ">>Gathering Location Data\n";
@@ -12,11 +15,10 @@ int main() {
 	cout << ">>Gathering Forcast Data\n";
 	//AER::GetWeatherData(39.70866, -119.699341);
 	cout << ">>Data Gathering Compleated\n>>Begining Program\n";
-	time_t timea;
-	ctime(&timea);
-	cout << timea << endl;
-	CONSCIENTIA::InitializeConscientia();
-	CONSCIENTIA::Gchar();
-	CONSCIENTIA::TerminateConscientia();
+	_getch();
+	//CONSCIENTIA::InitializeConscientia();
+	//CONSCIENTIA::Gchar();
+	//CONSCIENTIA::TerminateConscientia();
+	LOGGING::TerminateLogging();
 	return(1);
 }

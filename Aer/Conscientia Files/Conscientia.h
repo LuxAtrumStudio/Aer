@@ -5,18 +5,6 @@
 #include <fstream>
 #include <ctime>
 using namespace std;
-struct menuList {
-	string name;
-	vector<string> items;
-};
-struct menuPage {
-	string name;
-	vector<menuList> lists;
-};
-struct menuHierarchy {
-	string name;
-	vector<menuPage> pages;
-};
 namespace CONSCIENTIA {
 	/*=====>>>>>-----CORE FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
@@ -83,7 +71,6 @@ namespace CONSCIENTIA {
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
 	/*>>>>>-----Menu-----<<<<<*/
 	string Menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY);
-	menuHierarchy LoadMenuHierarchy(string menuFileDirectory);
 	void DisplayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem);
 	int FindTextStart(string str, int space);
 	/*>>>>>-----DISPLAY-----<<<<<*/
@@ -94,31 +81,4 @@ namespace CONSCIENTIA {
 	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
 	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
 	bool FullStartUp(bool border, bool title);
-}
-
-namespace LOGGING {
-	void InitializeLogging();
-	void LogError(string log, string location);
-	void LogWarning(string log, string location);
-	void LogSuccess(string log, string location);
-	void LogData(string log, string location);
-	void Log(int code);
-	void TerminateLogging();
-}
-
-struct subVar {
-	string name;
-	vector<subVar> vars;
-	string strVar;
-	int intVar;
-	double doubleVar;
-};
-struct JSONFile {
-	vector<subVar> variables;
-};
-namespace CONCERO {
-	void RunScript(vector<string> scriptData);
-	void InterpretJSON(string file);
-	subVar ReadVar(string name, string raw);
-	JSONFile GetJSONFile(string name);
 }

@@ -85,6 +85,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,16 +116,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Aer.cpp" />
-    <ClCompile Include="Conscientia.cpp" />
+    <ClCompile Include="Conscientia Files\Concero.cpp" />
+    <ClCompile Include="Conscientia Files\Conscientia.cpp" />
+    <ClCompile Include="Conscientia Files\Logging.cpp" />
+    <ClCompile Include="Conscientia Files\LuxLector.cpp" />
     <ClCompile Include="Core.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aer.h" />
-    <ClInclude Include="Conscientia.h" />
+    <ClInclude Include="Conscientia Files\Concero.h" />
+    <ClInclude Include="Conscientia Files\Conscientia Headers.h" />
+    <ClInclude Include="Conscientia Files\Conscientia.h" />
+    <ClInclude Include="Conscientia Files\Logging.h" />
+    <ClInclude Include="Conscientia Files\LuxLector.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Conscientia Files\GetPage.py" />
     <None Include="GetPage.py" />
     <None Include="ProgramData.lux" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Log.log" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

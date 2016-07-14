@@ -1,1 +1,4 @@
 #DATAFILE
+int lastUpdate 1468382094
+vector string locations RENO SANFRANCISCO
+vector double coords 39.70866 -119.699341 37.7749 -122.4194
