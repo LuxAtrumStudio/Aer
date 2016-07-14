@@ -324,7 +324,7 @@ float CONSCIENTIA::Gfloat() {
 /*-----POINTER-----*/
 void CONSCIENTIA::Print(int pointer, string str) {
 	for (int a = 0; a < str.size(); a++) {
-		if (str[a] == '/') {
+		if (str[a] == '\\') {
 			int b = a + 1;
 			if (str[b] == 'n') {
 				windows[pointer].cursorY++;
@@ -338,7 +338,7 @@ void CONSCIENTIA::Print(int pointer, string str) {
 				a = a + 2;
 			}
 		}
-		else if (str[a] != '/') {
+		else if (str[a] != '\\') {
 			if (windows[pointer].border == false) {
 				if (windows[pointer].cursorX >= windows[pointer].sizeX) {
 					windows[pointer].cursorX = 0;

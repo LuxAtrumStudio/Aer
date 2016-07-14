@@ -26,7 +26,7 @@ void AER::GetWOEID(string location)
 void AER::GetWeatherData(double lat, double lon, string location)
 {
 	vector<string> scriptData = {
-		"", "https://api.forecast.io/forecast/9c9c48f9ab5717ed899e8b6d730883c6/" + to_string(lat) + "," + to_string(lon), "WeatherData/" + location + "WeatherData.json"
+		"", "https://api.forecast.io/forecast/9c9c48f9ab5717ed899e8b6d730883c6/" + to_string(lat) + "," + to_string(lon) + "?exclude=[minutely]", "WeatherData/" + location + "WeatherData.json"
 	};
 	CONCERO::RunScript(scriptData);
 }
@@ -86,9 +86,9 @@ void AER::SetWindowLayout()
 	CONSCIENTIA::GenorateWindow("locationData", 12, 0, (maxX - 52), 3, true, false);
 	CONSCIENTIA::GenorateWindow("dateTime", (maxX - 40), 0, 40, 3, true, false);
 	/*Core Windows*/
-	CONSCIENTIA::GenorateWindow("Current Weather Data", 0, 3, (maxX / 10) * 3, maxY - 3, true, true);
-	CONSCIENTIA::GenorateWindow("Forcast Selection", (maxX / 10) * 3, 3, (maxX / 10) * 2, maxY - 3, true, true);
-	CONSCIENTIA::GenorateWindow("Forcasted Weather Data", (maxX / 10) * 5, 3, (maxX / 10) * 5, maxY - 3, true, true);
+	CONSCIENTIA::GenorateWindow("Current Weather Data", 0, 3, (maxX / 10) * 4, maxY - 3, true, true);
+	CONSCIENTIA::GenorateWindow("Forcast Selection", (maxX / 10) * 4, 3, (maxX / 10) * 2, maxY - 3, true, true);
+	CONSCIENTIA::GenorateWindow("Forcasted Weather Data", (maxX / 10) * 6, 3, (maxX / 10) * 4, maxY - 3, true, true);
 }
 
 void AER::LoadJSONData()
@@ -105,11 +105,15 @@ void AER::DrawData()
 	/*Date Time*/
 	time_t currentTime;
 	time(&currentTime);
-	tm curretnTM = *localtime(&currentTime);
-	string dateTime = GetData(curretnTM) + " " + GetTime(curretnTM, true, false);
+	int offset = CONCERO::GetIntVariable("offset", weatherData);
+	currentTime = currentTime + (offset * 3600);
+	tm currentTM = *gmtime(&currentTime);
+	//Must Change local time to gmt, then convert using offset;
+	string dateTime = GetData(currentTM) + " " + GetTime(currentTM, true, false);
 	CONSCIENTIA::FGetWindowSize("dateTime", tempSizeX, tempSizeY);
 	CONSCIENTIA::FMPrint("dateTime", CONSCIENTIA::FindTextStart(dateTime, tempSizeX), 1, dateTime);
 	/*Location*/
+	subVar currentData = CONCERO::GetVariable("currently", weatherData);
 	string location = "";
 	location = CONCERO::GetStringVariable("name", locationData) + ", ";
 	location = location + CONCERO::GetStringVariable("admin1", locationData) + ", ";
@@ -117,7 +121,6 @@ void AER::DrawData()
 	CONSCIENTIA::FGetWindowSize("locationData", tempSizeX, tempSizeY);
 	CONSCIENTIA::FMPrint("locationData", CONSCIENTIA::FindTextStart(location, tempSizeX), 1, location);
 	/*CurrentTemp Menu*/
-	subVar currentData = CONCERO::GetVariable("currently", weatherData);
 	string currentTemp = to_string(currentData.vars[7].doubleVar);
 	string tempTemp;
 	int a = 0, b = 0;
@@ -132,13 +135,15 @@ void AER::DrawData()
 	currentTemp = currentTemp + char(248) + "F";
 	CONSCIENTIA::FGetWindowSize("currentTemp", tempSizeX, tempSizeY);
 	CONSCIENTIA::FMPrint("currentTemp", CONSCIENTIA::FindTextStart(currentTemp, tempSizeX), 1, currentTemp);
-
 	/*>>>>>CORE DATA<<<<<*/
 	/*Current Data*/
 	string line;
 	for (unsigned a = 0; a < currentData.vars.size(); a++) {
 		line = "";
+		line = ConvertVartName(currentData.vars[a].name) + ": " + ConvertVar(currentData.vars[a]);
+		CONSCIENTIA::FMPrint("Current Weather Data", 1, a + 1, line);
 	}
+
 	/*Update*/
 	CONSCIENTIA::DrawBorder(1);
 	CONSCIENTIA::DrawBorder(2);
@@ -208,6 +213,83 @@ string AER::GetTime(tm date, bool meridies, bool seconeds)
 		}
 	}
 	return(time);
+}
+
+string AER::ConvertVartName(string var)
+{
+	string name;
+	name = char(int(var[0]) - 32);
+	for (unsigned a = 1; a < var.size() - 1; a++) {
+		if (int(var[a]) < 97) {
+			name = name + ' ';
+		}
+		name = name + var[a];
+	}
+	name = name + var[var.size() - 1];
+	return(name);
+}
+
+string AER::ConvertVar(subVar var)
+{
+	string variable = "";
+	if (var.name == "time") {
+		time_t dataTime = (time_t)var.intVar;
+		int offset = CONCERO::GetIntVariable("offset", weatherData);
+		dataTime = dataTime + (offset * 3600);
+		tm dataTM = *gmtime(&dataTime);
+		variable = GetData(dataTM) + " " + GetTime(dataTM, true, true);
+	}
+	else if (var.name == "nearestStormDistance" || var.name == "visibility") {
+		variable = to_string(var.intVar) + " mi";
+	}
+	else if (var.name == "nearestStormBearing" || var.name == "windBearing") {
+		string bearings[16] = { "North",
+			"North, North East",
+			"North East",
+			"East, North East",
+			"East",
+			"East, South East",
+			"South East",
+			"South, South East",
+			"South",
+			"South, South West",
+			"South West",
+			"West, South West",
+			"West",
+			"West, North West",
+			"North West",
+			"North, North West"
+		};
+		int bearing = (int)((var.intVar / 22.5) + 0.5);
+		variable = bearings[bearing % 16];
+	}
+	else if (var.name == "precipIntensity") {
+		variable = var.strVar + " in/hr";
+	}
+	else if (var.name == "precipProbability" || var.name == "humidity" || var.name == "cloudCover") {
+		if (var.strVar == "0") {
+			variable = "0%";
+		}
+		else {
+			variable = to_string((var.doubleVar * (double)100)) + "%";
+		}
+	}
+	else if (var.name == "temperature" || var.name == "apparentTemperature" || var.name == "dewPoint") {
+		variable = var.strVar + char(248) + "F";
+	}
+	else if (var.name == "windSpeed") {
+		variable = var.strVar + " mph";
+	}
+	else if (var.name == "pressure") {
+		variable = to_string(var.doubleVar * 0.000986923) + " atm";
+	}
+	else if (var.name == "ozone") {
+		variable = var.strVar + " DU";
+	}
+	else {
+		variable = var.strVar;
+	}
+	return(variable);
 }
 
 void AER::LoadCurrentData()

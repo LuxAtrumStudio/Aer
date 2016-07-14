@@ -18,6 +18,8 @@ namespace AER {
 	void DrawData();
 	string GetData(tm date);
 	string GetTime(tm date, bool meridies, bool seconeds);
+	string ConvertVartName(string var);
+	string ConvertVar(subVar var);
 	/*Change Funcions*/
 	void LoadCurrentData();
 	/*Run Functions*/
