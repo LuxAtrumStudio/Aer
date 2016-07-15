@@ -133,6 +133,7 @@
   <ItemGroup>
     <None Include="Conscientia Files\GetPage.py" />
     <None Include="GetPage.py" />
+    <None Include="Menu.lux" />
     <None Include="ProgramData.lux" />
   </ItemGroup>
   <ItemGroup>

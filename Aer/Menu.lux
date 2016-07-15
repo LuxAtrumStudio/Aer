@@ -1,0 +1,15 @@
+#HIERARCHYFILE
+[Aer Menu]{
+	[Settings]{
+		[]{
+			Quit
+			Return
+		 }
+	}
+	[Locations]{
+		[]{
+			New Location
+			Delete Location
+		 }
+	}
+}

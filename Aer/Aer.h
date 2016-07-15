@@ -24,4 +24,6 @@ namespace AER {
 	void LoadCurrentData();
 	/*Run Functions*/
 	void RunProgram();
+	void NewLocation();
+	void RemoveLocation();
 }

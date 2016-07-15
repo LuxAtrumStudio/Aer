@@ -73,6 +73,9 @@
     <None Include="Conscientia Files\GetPage.py">
       <Filter>Conscientia Files\Source Files</Filter>
     </None>
+    <None Include="Menu.lux">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Log.log">

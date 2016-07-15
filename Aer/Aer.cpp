@@ -46,7 +46,7 @@ void AER::ProgramStartUp()
 	if (currentTM.tm_hour != lastUpdateTM.tm_hour ||
 		currentTM.tm_mday != lastUpdateTM.tm_mday ||
 		currentTM.tm_mon != lastUpdateTM.tm_mon ||
-		currentTM.tm_year != lastUpdateTM.tm_year) {
+		currentTM.tm_year != lastUpdateTM.tm_year || updateData.data[3].stringVectorValue.size() > 0) {
 		cout << ">Fetching New Location Data:\n";
 		for (unsigned a = 0; a < updateData.data[3].stringVectorValue.size(); a++) {
 			cout << ">>" + updateData.data[3].stringVectorValue[a] << endl;
@@ -199,16 +199,6 @@ void AER::DrawData()
 		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart(line, tempSizeX), lineNumber, line);
 		lineNumber++;
 	}
-	/*Update*/
-	CONSCIENTIA::DrawBorder(1);
-	CONSCIENTIA::DrawBorder(2);
-	CONSCIENTIA::DrawBorder(3);
-	CONSCIENTIA::DrawBorder(4);
-	CONSCIENTIA::DrawBorder(5);
-	CONSCIENTIA::DrawBorder(6);
-	CONSCIENTIA::DrawTitle(4);
-	CONSCIENTIA::DrawTitle(5);
-	CONSCIENTIA::DrawTitle(6);
 }
 
 string AER::GetData(tm date)
@@ -379,65 +369,204 @@ void AER::RunProgram()
 {
 	bool running = true;
 	int input = -1;
+	bool update = true, data = false;
+	if (updateData.data[1].stringVectorValue.size() > 0) {
+		data = true;
+	}
 	SetWindowLayout();
-	LoadCurrentData();
-	bool update = true;
+	if (data == true) {
+		LoadCurrentData();
+	}
 	while (running == true) {
 		if (update == true) {
 			update = false;
-			DrawData();
+			if (data == true) {
+				DrawData();
+			}
+			else if (data == false) {
+				int tempX, tempY;
+				CONSCIENTIA::FGetWindowSize("locationData", tempX, tempY);
+				CONSCIENTIA::FMPrint("locationData", CONSCIENTIA::FindTextStart("Please Enter A Location", tempX), 1, "Please Enter A Location");
+			}
+			/*Update*/
+			CONSCIENTIA::DrawBorder(1);
+			CONSCIENTIA::DrawBorder(2);
+			CONSCIENTIA::DrawBorder(3);
+			CONSCIENTIA::DrawBorder(4);
+			CONSCIENTIA::DrawBorder(5);
+			CONSCIENTIA::DrawBorder(6);
+			CONSCIENTIA::DrawTitle(4);
+			CONSCIENTIA::DrawTitle(5);
+			CONSCIENTIA::DrawTitle(6);
 			CONSCIENTIA::Update();
 		}
 		input = CONSCIENTIA::Gint();
 		if (input == 27) {
-			running = false;
-			update = true;
+			string strInput = "";
+			int tempX, tempY;
+			CONSCIENTIA::GetWindowSize(0, tempX, tempY);
+			strInput = CONSCIENTIA::Menu("Menu.lux", (tempX / 3), (tempY / 2) - 5, (tempX / 3), 10);
+			if (strInput == "Quit") {
+				running = false;
+				LUXLECTOR::SaveDataFile("ProgramData.lux", updateData);
+			}
+			if (strInput == "Return") {
+				update = true;
+			}
+			if (strInput == "New Location") {
+				update = true;
+				NewLocation();
+				if (updateData.data[1].stringVectorValue.size() > 0) {
+					data = true;
+					LoadCurrentData();
+				}
+				else {
+					data = false;
+				}
+			}
+			if (strInput == "Delete Location") {
+				RemoveLocation();
+				update = true;
+				if (updateData.data[1].stringVectorValue.size() > 0) {
+					data = true;
+				}
+				else {
+					data = false;
+				}
+				if (data == true) {
+					LoadCurrentData();
+				}
+			}
 		}
-		if (input == 97 && day == true) {
+		if (input == 97 && day == true && data == true) {
 			update = true;
 			day = false;
 			currentForcast = 0;
 		}
-		if (input == 100 && day == false) {
+		if (input == 100 && day == false && data == true) {
 			update = true;
 			day = true;
 			currentForcast = 0;
 		}
-		if (input == 119 && currentForcast > 0) {
+		if (input == 119 && currentForcast > 0 && data == true) {
 			update = true;
 			currentForcast--;
 		}
-		if (input == 115 && currentForcast < maxForcast) {
+		if (input == 115 && currentForcast < maxForcast && data == true) {
 			update = true;
 			currentForcast++;
 		}
-		if (input == 113 && currentLocation > 0) {
+		if (input == 113 && currentLocation > 0 && data == true) {
 			update = true;
 			currentLocation--;
 			currentForcast = 0;
 			LoadCurrentData();
 		}
-		if (input == 101 && currentLocation < updateData.data[1].stringVectorValue.size() - 1) {
+		if (input == 101 && currentLocation < updateData.data[1].stringVectorValue.size() - 1 && data == true) {
 			update = true;
 			currentLocation++;
 			currentForcast = 0;
 			LoadCurrentData();
 		}
-		if (input == 114 && displayStartCurrent > 0) {
+		if (input == 114 && displayStartCurrent > 0 && data == true) {
 			displayStartCurrent--;
 			update = true;
 		}
-		if (input == 102) {
+		if (input == 102 && data == true) {
 			displayStartCurrent++;
 			update = true;
 		}
-		if (input == 116 && displayStartForcast > 0) {
+		if (input == 116 && displayStartForcast > 0 && data == true) {
 			displayStartForcast--;
 			update = true;
 		}
-		if (input == 103) {
+		if (input == 103 && data == true) {
 			displayStartForcast++;
 			update = true;
 		}
+	}
+}
+
+void AER::NewLocation()
+{
+	int x, y;
+	char inchar;
+	int inint = 0;
+	string line;
+	CONSCIENTIA::GetWindowSize(0, x, y);
+	CONSCIENTIA::GenorateWindow("New Location", (x / 3), (y / 2) - 2, (x / 3), 4, true, true);
+	while (inint != 13) {
+		CONSCIENTIA::FMPrint("New Location", CONSCIENTIA::FindTextStart(line, (x / 3)), 2, line);
+		CONSCIENTIA::DrawBorder(CONSCIENTIA::FindWindowPointer("New Location"));
+		CONSCIENTIA::DrawTitle(CONSCIENTIA::FindWindowPointer("New Location"));
+		CONSCIENTIA::Update();
+		inint = CONSCIENTIA::Gint();
+		inchar = char(inint);
+		if (inint != 13 && inint != 8) {
+			line = line + inchar;
+		}
+		if (inint == 8 && line.size() > 0) {
+			string temp = "";
+			for (unsigned a = 0; a < line.size() - 1; a++) {
+				temp = temp + line[a];
+			}
+			line = temp;
+		}
+	}
+	CONSCIENTIA::TerminateWindow(CONSCIENTIA::FindWindowPointer("New Location"));
+	string locationName = "";
+	for (unsigned a = 0; a < line.size(); a++) {
+		if (line[a] != ' ') {
+			if (int(line[a]) > 91) {
+				locationName = locationName + char(int(line[a]) - 32);
+			}
+			else {
+				locationName = locationName + line[a];
+			}
+		}
+	}
+	updateData.data[3].stringVectorValue.push_back(locationName);
+}
+
+void AER::RemoveLocation()
+{
+	currentLocation = 0;
+	currentForcast = 0;
+	displayStartCurrent = 0;
+	displayStartForcast = 0;
+	int x, y;
+	int inInt = -1;
+	bool update = true;
+	int selected = 0;
+	CONSCIENTIA::GetWindowSize(0, x, y);
+	CONSCIENTIA::GenorateWindow("Delete Location", x / 3, y / 4, x / 3, y / 2, true, true);
+	while (inInt != 13 && inInt != 27) {
+		if (update == true) {
+			for (unsigned a = 0; a < updateData.data[1].stringVectorValue.size(); a++) {
+				string line = updateData.data[1].stringVectorValue[a];
+				if (a == selected) {
+					line = ">" + line + "<";
+				}
+				CONSCIENTIA::FMPrint("Delete Location", CONSCIENTIA::FindTextStart(line, x / 3), a + 1, line);
+			}
+			CONSCIENTIA::DrawBorder(CONSCIENTIA::FindWindowPointer("Delete Location"));
+			CONSCIENTIA::DrawTitle(CONSCIENTIA::FindWindowPointer("Delete Location"));
+			CONSCIENTIA::Update();
+			update = false;
+		}
+		inInt = CONSCIENTIA::Gint();
+		if (inInt == 115 && selected < updateData.data[1].stringVectorValue.size() - 1) {
+			selected++;
+			update = true;
+		}
+		if (inInt == 119 && selected > 0) {
+			selected--;
+			update = true;
+		}
+	}
+	if (inInt == 13 && selected < updateData.data[1].stringVectorValue.size()) {
+		updateData.data[2].doubleVectorValue.erase(updateData.data[2].doubleVectorValue.begin() + (selected * 2) + 1);
+		updateData.data[2].doubleVectorValue.erase(updateData.data[2].doubleVectorValue.begin() + (selected * 2));
+		updateData.data[1].stringVectorValue.erase(updateData.data[1].stringVectorValue.begin() + selected);
 	}
 }
