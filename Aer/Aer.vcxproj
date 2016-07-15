@@ -95,6 +95,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -108,6 +109,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -129,6 +131,8 @@
     <ClInclude Include="Conscientia Files\Conscientia.h" />
     <ClInclude Include="Conscientia Files\Logging.h" />
     <ClInclude Include="Conscientia Files\LuxLector.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Conscientia Files\GetPage.py" />
@@ -138,6 +142,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Log.log" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Aer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Aer.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

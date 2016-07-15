@@ -565,6 +565,11 @@ void AER::RemoveLocation()
 		}
 	}
 	if (inInt == 13 && selected < updateData.data[1].stringVectorValue.size()) {
+		string WOEIDDataDelete, weatherDataDelete;
+		WOEIDDataDelete = "WOEID/" + updateData.data[1].stringVectorValue[selected] + "WOEIDData.json";
+		remove(WOEIDDataDelete.c_str());
+		weatherDataDelete = "WeatherData/" + updateData.data[1].stringVectorValue[selected] + "WeatherData.json";
+		remove(weatherDataDelete.c_str());
 		updateData.data[2].doubleVectorValue.erase(updateData.data[2].doubleVectorValue.begin() + (selected * 2) + 1);
 		updateData.data[2].doubleVectorValue.erase(updateData.data[2].doubleVectorValue.begin() + (selected * 2));
 		updateData.data[1].stringVectorValue.erase(updateData.data[1].stringVectorValue.begin() + selected);

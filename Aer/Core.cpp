@@ -7,6 +7,7 @@ using namespace std;
 
 int main() {
 	LOGGING::InitializeLogging();
+	CONSCIENTIA::SetConsoleName("Aer Weather");
 	AER::ProgramStartUp();
 	CONSCIENTIA::InitializeConscientia();
 	AER::RunProgram();
