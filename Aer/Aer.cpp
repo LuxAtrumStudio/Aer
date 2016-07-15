@@ -15,6 +15,7 @@ bool day = true;
 dataFile updateData;
 string locationData, weatherData;
 int currentForcast = 0, maxForcast = 0;
+int displayStartCurrent = 0, displayStartForcast = 0;
 
 void AER::GetWOEID(string location)
 {
@@ -87,8 +88,8 @@ void AER::SetWindowLayout()
 	CONSCIENTIA::GenorateWindow("locationData", 12, 0, (maxX - 52), 3, true, false);
 	CONSCIENTIA::GenorateWindow("dateTime", (maxX - 40), 0, 40, 3, true, false);
 	/*Core Windows*/
-	CONSCIENTIA::GenorateWindow("Current Weather Data", 0, 3, (maxX / 10) * 4, maxY - 3, true, true);
-	CONSCIENTIA::GenorateWindow("Forcast Selection", (maxX / 10) * 4, 3, (maxX / 10) * 2, maxY - 3, true, true);
+	CONSCIENTIA::GenorateWindow("Current Weather Data", 0, 3, ((maxX / 10) * 4) - 1, maxY - 3, true, true);
+	CONSCIENTIA::GenorateWindow("Forcast Selection", ((maxX / 10) * 4) - 1, 3, ((maxX / 10) * 2) + 1, maxY - 3, true, true);
 	CONSCIENTIA::GenorateWindow("Forcasted Weather Data", (maxX / 10) * 6, 3, (maxX / 10) * 4, maxY - 3, true, true);
 }
 
@@ -109,7 +110,6 @@ void AER::DrawData()
 	int offset = CONCERO::GetIntVariable("offset", weatherData);
 	currentTime = currentTime + (offset * 3600);
 	tm currentTM = *gmtime(&currentTime);
-	//Must Change local time to gmt, then convert using offset;
 	string dateTime = GetData(currentTM) + " " + GetTime(currentTM, true, false);
 	CONSCIENTIA::FGetWindowSize("dateTime", tempSizeX, tempSizeY);
 	CONSCIENTIA::FMPrint("dateTime", CONSCIENTIA::FindTextStart(dateTime, tempSizeX), 1, dateTime);
@@ -137,12 +137,15 @@ void AER::DrawData()
 	CONSCIENTIA::FGetWindowSize("currentTemp", tempSizeX, tempSizeY);
 	CONSCIENTIA::FMPrint("currentTemp", CONSCIENTIA::FindTextStart(currentTemp, tempSizeX), 1, currentTemp);
 	/*>>>>>CORE DATA<<<<<*/
+	int lineNumber;
 	/*Current Data*/
 	string line;
-	for (unsigned a = 0; a < currentData.vars.size(); a++) {
+	lineNumber = 1;
+	for (unsigned a = displayStartCurrent; a < currentData.vars.size(); a++) {
 		line = "";
 		line = ConvertVartName(currentData.vars[a].name) + ": " + ConvertVar(currentData.vars[a]);
-		CONSCIENTIA::FMPrint("Current Weather Data", 1, a + 1, line);
+		CONSCIENTIA::FMPrint("Current Weather Data", 1, lineNumber, line);
+		lineNumber++;
 	}
 	/*Forcasted Data*/
 	subVar selectedType;
@@ -157,10 +160,44 @@ void AER::DrawData()
 		selectedData = selectedType.vars[2 + currentForcast];
 		maxForcast = selectedType.vars.size() - 3;
 	}
-	for (unsigned a = 0; a < selectedData.vars.size(); a++) {
+	lineNumber = 1;
+	for (unsigned a = displayStartForcast; a < selectedData.vars.size(); a++) {
 		line = "";
 		line = ConvertVartName(selectedData.vars[a].name) + ": " + ConvertVar(selectedData.vars[a]);
-		CONSCIENTIA::FMPrint("Forcasted Weather Data", 1, a + 1, line);
+		CONSCIENTIA::FMPrint("Forcasted Weather Data", 1, lineNumber, line);
+		lineNumber++;
+	}
+	/*Selection Data*/
+	if (day == true) {
+		CONSCIENTIA::FGetWindowSize("Forcast Selection", tempSizeX, tempSizeY);
+		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart("7 Day Forcast", tempSizeX), 1, "7 Day Forcast");
+	}
+	else {
+		CONSCIENTIA::FGetWindowSize("Forcast Selection", tempSizeX, tempSizeY);
+		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart("48 Hour Forcast", tempSizeX), 1, "48 Hour Forcast");
+	}
+	int displayStart = 0;
+	while (currentForcast > tempSizeY + displayStart - 6) {
+		displayStart++;
+	}
+	lineNumber = 3;
+	for (unsigned a = displayStart; a < selectedType.vars.size() - 2 && a < tempSizeY + displayStart - 2; a++) {
+		line = "";
+		time_t forcastTime = (time_t)selectedType.vars[2 + a].vars[0].intVar;
+		int offset = CONCERO::GetIntVariable("offset", weatherData);
+		forcastTime = forcastTime + (offset * 3600);
+		tm forcastTM = *gmtime(&forcastTime);
+		if (day == true) {
+			line = GetData(forcastTM);
+		}
+		if (day == false) {
+			line = GetTime(forcastTM, true, false);
+		}
+		if (a == currentForcast) {
+			line = ">" + line + "<";
+		}
+		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart(line, tempSizeX), lineNumber, line);
+		lineNumber++;
 	}
 	/*Update*/
 	CONSCIENTIA::DrawBorder(1);
@@ -241,7 +278,9 @@ string AER::ConvertVartName(string var)
 		if (int(var[a]) < 97) {
 			name = name + ' ';
 		}
-		name = name + var[a];
+		if (var[a] != '-') {
+			name = name + var[a];
+		}
 	}
 	name = name + var[var.size() - 1];
 	return(name);
@@ -313,12 +352,16 @@ string AER::ConvertVar(subVar var)
 		tm dataTM = *gmtime(&dataTime);
 		variable = GetTime(dataTM, true, true);
 	}
-	else if (var.name == "temperatureMinTime" || var.name == "temperatureMaxTime" || var.name == "apparentTemperatureMinTime" || var.name == "apparentTemperatureMaxTime") {
+	else if (var.name == "temperatureMinTime" || var.name == "temperatureMaxTime" || var.name == "apparentTemperatureMinTime" || var.name == "apparentTemperatureMaxTime" || var.name == "precipIntensityMaxTime") {
 		time_t dataTime = (time_t)var.intVar;
 		int offset = CONCERO::GetIntVariable("offset", weatherData);
 		dataTime = dataTime + (offset * 3600);
 		tm dataTM = *gmtime(&dataTime);
 		variable = GetTime(dataTM, true, false);
+	}
+
+	else if (var.name == "precipType" || var.name == "icon") {
+		variable = ConvertVartName(var.strVar);
 	}
 	else {
 		variable = var.strVar;
@@ -353,10 +396,12 @@ void AER::RunProgram()
 		if (input == 97 && day == true) {
 			update = true;
 			day = false;
+			currentForcast = 0;
 		}
 		if (input == 100 && day == false) {
 			update = true;
 			day = true;
+			currentForcast = 0;
 		}
 		if (input == 119 && currentForcast > 0) {
 			update = true;
@@ -369,12 +414,30 @@ void AER::RunProgram()
 		if (input == 113 && currentLocation > 0) {
 			update = true;
 			currentLocation--;
+			currentForcast = 0;
 			LoadCurrentData();
 		}
 		if (input == 101 && currentLocation < updateData.data[1].stringVectorValue.size() - 1) {
 			update = true;
 			currentLocation++;
+			currentForcast = 0;
 			LoadCurrentData();
+		}
+		if (input == 114 && displayStartCurrent > 0) {
+			displayStartCurrent--;
+			update = true;
+		}
+		if (input == 102) {
+			displayStartCurrent++;
+			update = true;
+		}
+		if (input == 116 && displayStartForcast > 0) {
+			displayStartForcast--;
+			update = true;
+		}
+		if (input == 103) {
+			displayStartForcast++;
+			update = true;
 		}
 	}
 }
