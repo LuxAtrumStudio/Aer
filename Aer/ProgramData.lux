@@ -1,5 +1,5 @@
 #DATAFILE
-int lastUpdate 1468601674
-vector string locations
-vector double coords
+int lastUpdate 1468862509
+vector string locations RENO
+vector double coords 39.536270 -119.830482
 vector string newLocations

@@ -11,7 +11,7 @@
 using namespace std;
 
 int currentLocation = 0;
-bool day = true;
+int day = 1;
 dataFile updateData;
 string locationData, weatherData;
 int currentForcast = 0, maxForcast = 0;
@@ -150,15 +150,20 @@ void AER::DrawData()
 	/*Forcasted Data*/
 	subVar selectedType;
 	subVar selectedData;
-	if (day == true) {
+	if (day == 1) {
 		selectedType = CONCERO::GetVariable("daily", weatherData);
 		selectedData = selectedType.vars[2 + currentForcast];
 		maxForcast = selectedType.vars.size() - 3;
 	}
-	else {
+	else if (day == 0) {
 		selectedType = CONCERO::GetVariable("hourly", weatherData);
 		selectedData = selectedType.vars[2 + currentForcast];
 		maxForcast = selectedType.vars.size() - 3;
+	}
+	else if (day == 2) {
+		selectedType = CONCERO::GetVariable("alerts", weatherData);
+		selectedData = selectedType.vars[currentForcast];
+		maxForcast = selectedType.vars.size();
 	}
 	lineNumber = 1;
 	for (unsigned a = displayStartForcast; a < selectedData.vars.size(); a++) {
@@ -168,13 +173,17 @@ void AER::DrawData()
 		lineNumber++;
 	}
 	/*Selection Data*/
-	if (day == true) {
+	if (day == 1) {
 		CONSCIENTIA::FGetWindowSize("Forcast Selection", tempSizeX, tempSizeY);
 		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart("7 Day Forcast", tempSizeX), 1, "7 Day Forcast");
 	}
-	else {
+	else if (day == 0) {
 		CONSCIENTIA::FGetWindowSize("Forcast Selection", tempSizeX, tempSizeY);
 		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart("48 Hour Forcast", tempSizeX), 1, "48 Hour Forcast");
+	}
+	else if (day == 2) {
+		CONSCIENTIA::FGetWindowSize("Forcast Selection", tempSizeX, tempSizeY);
+		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart("Weather Alerts", tempSizeX), 1, "Weather Alerts");
 	}
 	int displayStart = 0;
 	while (currentForcast > tempSizeY + displayStart - 6) {
@@ -183,15 +192,20 @@ void AER::DrawData()
 	lineNumber = 3;
 	for (unsigned a = displayStart; a < selectedType.vars.size() - 2 && a < tempSizeY + displayStart - 2; a++) {
 		line = "";
-		time_t forcastTime = (time_t)selectedType.vars[2 + a].vars[0].intVar;
-		int offset = CONCERO::GetIntVariable("offset", weatherData);
-		forcastTime = forcastTime + (offset * 3600);
-		tm forcastTM = *gmtime(&forcastTime);
-		if (day == true) {
-			line = GetData(forcastTM);
+		if (day == 0 || day == 1) {
+			time_t forcastTime = (time_t)selectedType.vars[2 + a].vars[0].intVar;
+			int offset = CONCERO::GetIntVariable("offset", weatherData);
+			forcastTime = forcastTime + (offset * 3600);
+			tm forcastTM = *gmtime(&forcastTime);
+			if (day == 1) {
+				line = GetData(forcastTM);
+			}
+			if (day == 0) {
+				line = GetTime(forcastTM, true, false);
+			}
 		}
-		if (day == false) {
-			line = GetTime(forcastTM, true, false);
+		if (day == 2) {
+			line = selectedType.vars[a].vars[0].strVar;
 		}
 		if (a == currentForcast) {
 			line = ">" + line + "<";
@@ -263,6 +277,9 @@ string AER::GetTime(tm date, bool meridies, bool seconeds)
 string AER::ConvertVartName(string var)
 {
 	string name;
+	if (var == "") {
+		return("ERROR");
+	}
 	name = char(int(var[0]) - 32);
 	for (unsigned a = 1; a < var.size() - 1; a++) {
 		if (int(var[a]) < 97) {
@@ -438,14 +455,14 @@ void AER::RunProgram()
 				}
 			}
 		}
-		if (input == 97 && day == true && data == true) {
+		if (input == 97 && day > 0 && data == true) {
 			update = true;
-			day = false;
+			day--;
 			currentForcast = 0;
 		}
-		if (input == 100 && day == false && data == true) {
+		if (input == 100 && day < 2 && data == true) {
 			update = true;
-			day = true;
+			day++;
 			currentForcast = 0;
 		}
 		if (input == 119 && currentForcast > 0 && data == true) {
@@ -565,6 +582,11 @@ void AER::RemoveLocation()
 		}
 	}
 	if (inInt == 13 && selected < updateData.data[1].stringVectorValue.size()) {
+		string WOEIDDataDelete, weatherDataDelete;
+		WOEIDDataDelete = "WOEID/" + updateData.data[1].stringVectorValue[selected] + "WOEIDData.json";
+		remove(WOEIDDataDelete.c_str());
+		weatherDataDelete = "WeatherData/" + updateData.data[1].stringVectorValue[selected] + "WeatherData.json";
+		remove(weatherDataDelete.c_str());
 		updateData.data[2].doubleVectorValue.erase(updateData.data[2].doubleVectorValue.begin() + (selected * 2) + 1);
 		updateData.data[2].doubleVectorValue.erase(updateData.data[2].doubleVectorValue.begin() + (selected * 2));
 		updateData.data[1].stringVectorValue.erase(updateData.data[1].stringVectorValue.begin() + selected);

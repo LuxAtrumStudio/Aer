@@ -27,4 +27,6 @@ namespace CONCERO {
 	int GetIntVariable(string varName, string JSONName);
 	string GetStringVariable(string varName, string JSONName);
 	double GetDoubleVariable(string varName, string JSONName);
+
+	void print(subVar var);
 }
