@@ -45,10 +45,10 @@ void CONCERO::InterpretJSON(string file)
 		while (getline(load, line)) {
 			for (unsigned a = 0; a < line.size(); a++) {
 				if (line[a] == '[') {
-					line[a] = '{';
+					line[a] = NULL;
 				}
 				if (line[a] == ']') {
-					line[a] = '}';
+					line[a] = NULL;
 				}
 			}
 			raw = raw + line;

@@ -160,11 +160,6 @@ void AER::DrawData()
 		selectedData = selectedType.vars[2 + currentForcast];
 		maxForcast = selectedType.vars.size() - 3;
 	}
-	else if (day == 2) {
-		selectedType = CONCERO::GetVariable("alerts", weatherData);
-		selectedData = selectedType.vars[currentForcast];
-		maxForcast = selectedType.vars.size();
-	}
 	lineNumber = 1;
 	for (unsigned a = displayStartForcast; a < selectedData.vars.size(); a++) {
 		line = "";
@@ -181,10 +176,6 @@ void AER::DrawData()
 		CONSCIENTIA::FGetWindowSize("Forcast Selection", tempSizeX, tempSizeY);
 		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart("48 Hour Forcast", tempSizeX), 1, "48 Hour Forcast");
 	}
-	else if (day == 2) {
-		CONSCIENTIA::FGetWindowSize("Forcast Selection", tempSizeX, tempSizeY);
-		CONSCIENTIA::FMPrint("Forcast Selection", CONSCIENTIA::FindTextStart("Weather Alerts", tempSizeX), 1, "Weather Alerts");
-	}
 	int displayStart = 0;
 	while (currentForcast > tempSizeY + displayStart - 6) {
 		displayStart++;
@@ -192,21 +183,17 @@ void AER::DrawData()
 	lineNumber = 3;
 	for (unsigned a = displayStart; a < selectedType.vars.size() - 2 && a < tempSizeY + displayStart - 2; a++) {
 		line = "";
-		if (day == 0 || day == 1) {
-			time_t forcastTime = (time_t)selectedType.vars[2 + a].vars[0].intVar;
-			int offset = CONCERO::GetIntVariable("offset", weatherData);
-			forcastTime = forcastTime + (offset * 3600);
-			tm forcastTM = *gmtime(&forcastTime);
-			if (day == 1) {
-				line = GetData(forcastTM);
-			}
-			if (day == 0) {
-				line = GetTime(forcastTM, true, false);
-			}
+		time_t forcastTime = (time_t)selectedType.vars[2 + a].vars[0].intVar;
+		int offset = CONCERO::GetIntVariable("offset", weatherData);
+		forcastTime = forcastTime + (offset * 3600);
+		tm forcastTM = *gmtime(&forcastTime);
+		if (day == 1) {
+			line = GetData(forcastTM);
 		}
-		if (day == 2) {
-			line = selectedType.vars[a].vars[0].strVar;
+		if (day == 0) {
+			line = GetTime(forcastTM, true, false);
 		}
+
 		if (a == currentForcast) {
 			line = ">" + line + "<";
 		}
@@ -460,7 +447,7 @@ void AER::RunProgram()
 			day--;
 			currentForcast = 0;
 		}
-		if (input == 100 && day < 2 && data == true) {
+		if (input == 100 && day < 1 && data == true) {
 			update = true;
 			day++;
 			currentForcast = 0;
