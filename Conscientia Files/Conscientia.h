@@ -4,18 +4,7 @@
 #include <fstream>
 #include <ctime>
 using namespace std;
-struct menuList {
-	string name;
-	vector<string> items;
-};
-struct menuPage {
-	string name;
-	vector<menuList> lists;
-};
-struct menuHierarchy {
-	string name;
-	vector<menuPage> pages;
-};
+
 namespace CONSCIENTIA {
 	/*=====>>>>>-----CORE FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/

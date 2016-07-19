@@ -1,6 +1,5 @@
 #include <iostream>
 #include <time.h>
-#include <conio.h>
 #include "Conscientia Files\Conscientia Headers.h"
 #include "Aer.h"
 using namespace std;
