@@ -1,84 +1,94 @@
 #include <iostream>
 #include <string>
-#include <Windows.h>
 #include <vector>
 #include <fstream>
 #include <ctime>
 using namespace std;
+struct menuList {
+	string name;
+	vector<string> items;
+};
+struct menuPage {
+	string name;
+	vector<menuList> lists;
+};
+struct menuHierarchy {
+	string name;
+	vector<menuPage> pages;
+};
 namespace CONSCIENTIA {
 	/*=====>>>>>-----CORE FUNCTIONS-----<<<<<=====*/
 	/*=====>>>>>-----Initilization-----<<<<<=====*/
-	void InitializeConscientia();
-	void AdvancedInit(bool cursor, bool echo, bool raw);
+	void initializeConscientia();
+	void advancedInit(bool cursor, bool echo, bool raw);
 	/*>>>>>-----SETTINGS-----<<<<<*/
-	void SetAutoRefresh(bool setting);
+	void setAutoRefresh(bool setting);
+	/*>>>>>-----NCURSES-----<<<<<*/
+	void setCursor(bool setting);
+	void setEcho(bool setting);
+	void setRaw(bool setting);
 	/*=====>>>>>-----Run Time-----<<<<<=====*/
 	/*>>>>>-----WINDOW-----<<<<<*/
 	/*>>>>>-----Initilization-----<<<<<*/
-	void GenorateWindow(string name, int posX, int posY, int sizeX, int sizeY, bool border, bool title);
+	void createWindow(string name, int posX, int posY, int sizeX, int sizeY, bool border, bool title);
 	/*>>>>>-----Management-----<<<<<*/
-	void ClearAllWindows();
-	int FindWindowPointer(string name);
+	void clearAllWindows();
+	int findWindowPointer(string name);
 	/*-----POINTER-----*/
-	void SetBorder(int pointer, bool setting);
-	void ClearWindow(int pointer);
-	void SetWindowTitle(int pointer, bool setting);
-	void SetCurrentWindow(int pointer);
-	void GetWindowSize(int pointer, int& x, int& y);
+	void setBorder(int pointer, bool setting);
+	void clearWindow(int pointer);
+	void setWindowTitle(int pointer, bool setting);
+	void setCurrentWindow(int pointer);
 	/*-----CURRENT-----*/
-	void CSetBorder(bool setting);
-	void CClearWindow();
-	void CSetWindowTitle(bool setting);
-	void CGetWindowSize(int& x, int& y);
+	void csetBorder(bool setting);
+	void cclearWindow();
+	void csetWindowTitle(bool setting);
 	/*-----FIND-----*/
-	void FSetBorder(string name, bool setting);
-	void FClearWindow(string name);
-	void FSetWindowTitle(string name, bool setting);
-	void FSetCurrentWindow(string name);
-	void FGetWindowSize(string name, int& x, int& y);
-	/*-----WINDOWS-----*/
-	void DrawBorder(int pointer);
-	void DrawTitle(int pointer);
+	void fsetBorder(string name, bool setting);
+	void fclearWindow(string name);
+	void fsetWindowTitle(string name, bool setting);
+	void fsetCurrentWindow(string name);
+	/*-----NCURSES-----*/
+	void drawTitle(int pointer);
+	void drawBorder(int pointer, bool setting);
 	/*>>>>>-----Termination-----<<<<<*/
-	void TerminateAllWindows();
-	void TerminateWindow(int pointer);
+	void terminateAllWindows();
+	void terminateWindow(int pointer);
 	/*>>>>>-----USER INTERFACE-----<<<<<*/
 	/*>>>>>-----Input-----<<<<<*/
-	char Gchar();
-	int Gint();
-	int Cint();
-	string Cstr();
-	float Gfloat();
+	char gchar();
+	int gint();
+	int cint();
+	string cstr();
+	float cfloat();
 	/*>>>>>-----Output-----<<<<<*/
 	/*-----POINTER-----*/
-	void Print(int pointer, string str);
-	void MPrint(int pointer, int x, int y, string str);
+	void print(int pointer, string str);
+	void mprint(int pointer, int x, int y, string str);
 	/*-----CURRENT-----*/
-	void CPrint(string str);
-	void CMPrint(int x, int y, string str);
+	void cprint(string str);
+	void cmprint(int x, int y, string str);
 	/*-----FIND-----*/
-	void FPrint(string name, string str);
-	void FMPrint(string name, int x, int y, string str);
+	void fprint(string name, string str);
+	void fmprint(string name, int x, int y, string str);
 	/*>>>>>-----SYSTEM-----<<<<<*/
 	/*>>>>>-----Update-----<<<<<*/
-	void Update();
-	/*>>>>>-----Console-----<<<<<*/
-	void SetConsoleName(string title);
+	void update();
 	/*=====>>>>>-----Termination-----<<<<<=====*/
-	void TerminateConscientia();
+	void terminateConscientia();
 	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/
 	/*=====>>>>>-----Output Funcitons-----<<<<<=====*/
 	/*>>>>>-----INTERACTIVE-----<<<<<*/
 	/*>>>>>-----Menu-----<<<<<*/
-	string Menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY);
-	void DisplayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem);
-	int FindTextStart(string str, int space);
+	string menu(string menuFileDirectory, int posX, int posY, int sizeX, int sizeY);
+	menuHierarchy loadMenuHierarchy(string menuFileDirectory);
+	void displayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem);
+	int findTextStart(string str, int space);
 	/*>>>>>-----DISPLAY-----<<<<<*/
 	/*>>>>>-----Loading Bars-----<<<<<*/
-	int InitializeLoadingBar(string process);
-	void LoadingBar(int index, double percent);
-	void TerminateLoadingBar(int index);
+	int initializeLoadingBar(string process);
+	void loadingBar(int index, double percent);
+	void terminateLoadingBar(int index);
 	/*=====>>>>>-----Input Funcitons-----<<<<<=====*/
 	/*=====>>>>>-----System Funcitons-----<<<<<=====*/
-	bool FullStartUp(bool border, bool title);
 }
