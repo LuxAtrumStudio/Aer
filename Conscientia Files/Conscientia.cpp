@@ -3,7 +3,7 @@
 #include <sstream>
 #include <ncurses.h>
 #include <vector>
-#include "Conscientia.h"
+#include "Conscientia Headers.h"
 using namespace std;
 
 /*=====>>>>>-----DATA-----<<<<<=====*/
@@ -144,6 +144,10 @@ void CONSCIENTIA::SetWindowTitle(int pointer, bool setting){
 void CONSCIENTIA::SetCurrentWindow(int pointer){
   currentWindowPointer = pointer;
 }
+void CONSCIENTIA::GetWindowSize(int pointer, int& x, int &y){
+  x = windows[pointer].sizeX;
+  y = windows[pointer].sizeY;
+}
 /*-----CURRENT-----*/
 void CONSCIENTIA::CSetBorder(bool setting){
   setBorder(currentWindowPointer, setting);
@@ -154,8 +158,12 @@ void CONSCIENTIA::CClearWindow(){
 void CONSCIENTIA::CSetWindowTitle(bool setting){
   setWindowTitle(currentWindowPointer, setting);
 }
+void CONSCIENTIA::CGetWindowsize(int&x, int &y){
+  x = windows[currentWindowPointer].sizeX;
+	y = windows[currentWindowPointer].sizeY;
+}
 /*-----FIND-----*/
-void fsetBorder(string name, bool setting){
+void CONSCIENTIA::FsetBorder(string name, bool setting){
   setBorder(findWindowPointer(name), setting);
 }
 void CONSCIENTIA::FClearWindow(string name){
@@ -167,7 +175,19 @@ void CONSCIENTIA::FSetWindowtitle(string name, bool setting){
 void CONSCIENTIA::FSetCurrentWindow(string name){
   currentWindowPointer = findWindowPointer(name);
 }
+void CONSCIENTIA::FGetWindowSize(string name, int& x, int& y) {
+	x = windows[FindWindowPointer(name)].sizeX;
+	y = windows[FindWindowPointer(name)].sizeY;
+}
 /*-----LINUX-----*/
+void CONSCIENTIA::DrawBorder(int pointer, bool setting){
+  if(setting == false){
+    wborder(windows[pointer].pointer, ' ', ' ', ' ', ' ', ' ', ' ', ' ' , ' ');
+  }
+  else if(setting == true){
+    box(windows[pointer].pointer, 0, 0);
+  }
+}
 void CONSCIENTIA::DrawTitle(int pointer){
   int titleSize = windows[pointer].name.size();
   int windowSize = windows[pointer].sizeX;
@@ -176,14 +196,6 @@ void CONSCIENTIA::DrawTitle(int pointer){
   titleSize = titleSize / 2;
   posx = windowSize - titleSize;
   mvwprintw(windows[pointer].pointer, 0, posx, windows[pointer].name.c_str());
-}
-void CONSCIENTIA::DrawBorder(int pointer, bool setting){
-  if(setting == false){
-    wborder(windows[pointer].pointer, ' ', ' ', ' ', ' ', ' ', ' ', ' ' , ' ');
-  }
-  else if(setting == true){
-    box(windows[pointer].pointer, 0, 0);
-  }
 }
 /*>>>>>-----Termination-----<<<<<*/
 void CONSCIENTIA::TerminateAllWindows(){
@@ -325,6 +337,10 @@ void CONSCIENTIA::Update(){
   for(unsigned a = 0; a < windows.size(); a++){
     wrefresh(windows[a].pointer);
   }
+}
+/*>>>>>-----Console-----<<<<<*/
+void SetConsoleName(string title){
+
 }
 /*=====>>>>>-----Termination-----<<<<<=====*/
 void CONSCIENTIA::TerminateConscientia(){
@@ -526,3 +542,9 @@ void CONSCIENTIA::TerminateLoadingBar(int index) {
 }
 /*=====>>>>>-----Input Funcitons-----<<<<<=====*/
 /*=====>>>>>-----System Funcitons-----<<<<<=====*/
+bool CONSCIENTIA::FullStartUp(bool border, bool title) {
+	InitializeConscientia();
+	LOGGING::InitializeLogging();
+	GenorateWindow("Main", 0, 0, windows[0].sizeX - 2, windows[0].sizeY - 2, border, title);
+	return(true);
+}
