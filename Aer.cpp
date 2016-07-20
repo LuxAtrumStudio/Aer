@@ -4,7 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <ctime>
-#include "Conscientia Files\Conscientia Headers.h"
+#include "Conscientia Files/Conscientia Headers.h"
 #include "Aer.h"
 using namespace std;
 
@@ -387,15 +387,15 @@ void AER::RunProgram()
 				CONSCIENTIA::FMPrint("locationData", CONSCIENTIA::FindTextStart("Please Enter A Location", tempX), 1, "Please Enter A Location");
 			}
 			/*Update*/
-			CONSCIENTIA::DrawBorder(1);
-			CONSCIENTIA::DrawBorder(2);
-			CONSCIENTIA::DrawBorder(3);
-			CONSCIENTIA::DrawBorder(4);
-			CONSCIENTIA::DrawBorder(5);
-			CONSCIENTIA::DrawBorder(6);
-			CONSCIENTIA::DrawTitle(4);
-			CONSCIENTIA::DrawTitle(5);
-			CONSCIENTIA::DrawTitle(6);
+			//CONSCIENTIA::DrawBorder(1);
+			//CONSCIENTIA::DrawBorder(2);
+			//CONSCIENTIA::DrawBorder(3);
+			//CONSCIENTIA::DrawBorder(4);
+			//CONSCIENTIA::DrawBorder(5);
+			//CONSCIENTIA::DrawBorder(6);
+			//CONSCIENTIA::DrawTitle(4);
+			//CONSCIENTIA::DrawTitle(5);
+			//CONSCIENTIA::DrawTitle(6);
 			CONSCIENTIA::Update();
 		}
 		input = CONSCIENTIA::Gint();
@@ -495,8 +495,8 @@ void AER::NewLocation()
 	CONSCIENTIA::GenorateWindow("New Location", (x / 3), (y / 2) - 2, (x / 3), 4, true, true);
 	while (inint != 13) {
 		CONSCIENTIA::FMPrint("New Location", CONSCIENTIA::FindTextStart(line, (x / 3)), 2, line);
-		CONSCIENTIA::DrawBorder(CONSCIENTIA::FindWindowPointer("New Location"));
-		CONSCIENTIA::DrawTitle(CONSCIENTIA::FindWindowPointer("New Location"));
+		//CONSCIENTIA::DrawBorder(CONSCIENTIA::FindWindowPointer("New Location"));
+		//CONSCIENTIA::DrawTitle(CONSCIENTIA::FindWindowPointer("New Location"));
 		CONSCIENTIA::Update();
 		inint = CONSCIENTIA::Gint();
 		inchar = char(inint);
@@ -547,8 +547,8 @@ void AER::RemoveLocation()
 				}
 				CONSCIENTIA::FMPrint("Delete Location", CONSCIENTIA::FindTextStart(line, x / 3), a + 1, line);
 			}
-			CONSCIENTIA::DrawBorder(CONSCIENTIA::FindWindowPointer("Delete Location"));
-			CONSCIENTIA::DrawTitle(CONSCIENTIA::FindWindowPointer("Delete Location"));
+			//CONSCIENTIA::DrawBorder(CONSCIENTIA::FindWindowPointer("Delete Location"));
+			//CONSCIENTIA::DrawTitle(CONSCIENTIA::FindWindowPointer("Delete Location"));
 			CONSCIENTIA::Update();
 			update = false;
 		}

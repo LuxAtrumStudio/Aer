@@ -67,7 +67,7 @@ namespace CONSCIENTIA {
 	/*>>>>>-----Update-----<<<<<*/
 	void Update();
 	/*>>>>>-----Console-----<<<<<*/
-	void SetConsoleName(stirng title);
+	void SetConsoleName(string title);
 	/*=====>>>>>-----Termination-----<<<<<=====*/
 	void TerminateConscientia();
 	/*=====>>>>>-----ADVANCED FUNCITONS-----<<<<<=====*/

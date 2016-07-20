@@ -43,14 +43,14 @@ void CONSCIENTIA::InitializeConscientia(){
   declaration.border = false;
   declaration.title = false;
   windows.push_back(declaration);
-  setCursor(false);
-  setEcho(false);
+  SetCursor(false);
+  SetEcho(false);
 }
 void CONSCIENTIA::AdvancedInit(bool cursor, bool echo, bool raw){
-  initializeConscientia();
-  setCursor(cursor);
-  setEcho(echo);
-  setRaw(raw);
+  InitializeConscientia();
+  SetCursor(cursor);
+  SetEcho(echo);
+  SetRaw(raw);
 }
 /*>>>>-----SETTINGS-----<<<<<*/
 void CONSCIENTIA::SetAutoRefresh(bool setting){
@@ -108,13 +108,13 @@ void CONSCIENTIA::GenorateWindow(string name, int posX, int posY, int sizeX, int
   }
   windows.push_back(declaration);
   if(title == true){
-    drawTitle(windows.size() - 1);
+    DrawTitle(windows.size() - 1);
   }
 }
 /*>>>>>-----Management-----<<<<<*/
 void CONSCIENTIA::ClearAllWindows(){
   for(unsigned a = 0; a < windows.size(); a++){
-    clearWindow(a);
+    ClearWindow(a);
   }
 }
 int CONSCIENTIA::FindWindowPointer(string name){
@@ -129,7 +129,7 @@ int CONSCIENTIA::FindWindowPointer(string name){
 void CONSCIENTIA::SetBorder(int pointer, bool setting){
   if(windows[pointer].border != setting){
     windows[pointer].border = setting;
-    drawBorder(pointer, setting);
+    DrawBorder(pointer, setting);
   }
 }
 void CONSCIENTIA::ClearWindow(int pointer){
@@ -138,7 +138,7 @@ void CONSCIENTIA::ClearWindow(int pointer){
 void CONSCIENTIA::SetWindowTitle(int pointer, bool setting){
   if(windows[pointer].title != setting){
     windows[pointer].title = setting;
-    drawTitle(pointer);
+    DrawTitle(pointer);
   }
 }
 void CONSCIENTIA::SetCurrentWindow(int pointer){
@@ -150,30 +150,30 @@ void CONSCIENTIA::GetWindowSize(int pointer, int& x, int &y){
 }
 /*-----CURRENT-----*/
 void CONSCIENTIA::CSetBorder(bool setting){
-  setBorder(currentWindowPointer, setting);
+  SetBorder(currentWindowPointer, setting);
 }
 void CONSCIENTIA::CClearWindow(){
-  clearWindow(currentWindowPointer);
+  ClearWindow(currentWindowPointer);
 }
 void CONSCIENTIA::CSetWindowTitle(bool setting){
-  setWindowTitle(currentWindowPointer, setting);
+  SetWindowTitle(currentWindowPointer, setting);
 }
 void CONSCIENTIA::CGetWindowsize(int&x, int &y){
   x = windows[currentWindowPointer].sizeX;
 	y = windows[currentWindowPointer].sizeY;
 }
 /*-----FIND-----*/
-void CONSCIENTIA::FsetBorder(string name, bool setting){
-  setBorder(findWindowPointer(name), setting);
+void CONSCIENTIA::FSetBorder(string name, bool setting){
+  SetBorder(FindWindowPointer(name), setting);
 }
 void CONSCIENTIA::FClearWindow(string name){
-  clearWindow(findWindowPointer(name));
+  ClearWindow(FindWindowPointer(name));
 }
-void CONSCIENTIA::FSetWindowtitle(string name, bool setting){
-  setWindowTitle(findWindowPointer(name), setting);
+void CONSCIENTIA::FSetWindowTitle(string name, bool setting){
+  SetWindowTitle(FindWindowPointer(name), setting);
 }
 void CONSCIENTIA::FSetCurrentWindow(string name){
-  currentWindowPointer = findWindowPointer(name);
+  currentWindowPointer = FindWindowPointer(name);
 }
 void CONSCIENTIA::FGetWindowSize(string name, int& x, int& y) {
 	x = windows[FindWindowPointer(name)].sizeX;
@@ -195,22 +195,22 @@ void CONSCIENTIA::DrawTitle(int pointer){
   windowSize = windowSize / 2;
   titleSize = titleSize / 2;
   posx = windowSize - titleSize;
-  mvwprintw(windows[pointer].pointer, 0, posx, windows[pointer].name.c_str());
+  mvwPrintw(windows[pointer].pointer, 0, posx, windows[pointer].name.c_str());
 }
 /*>>>>>-----Termination-----<<<<<*/
 void CONSCIENTIA::TerminateAllWindows(){
   for(unsigned a = 0; a < windows.size(); a++){
-    terminateWindow(a);
+    TerminateWindow(a);
   }
 }
 void CONSCIENTIA::TerminateWindow(int pointer){
   if(windows[pointer].border == true){
-    setBorder(pointer, false);
+    SetBorder(pointer, false);
   }
   if(windows[pointer].title == true){
-    setWindowTitle(pointer, false);
+    SetWindowTitle(pointer, false);
   }
-  clearWindow(pointer);
+  ClearWindow(pointer);
   windows.erase(windows.begin() + pointer);
 }
 /*>>>>>-----USER INTERFACE-----<<<<<*/
@@ -246,7 +246,7 @@ string CONSCIENTIA::Cstr(){
   return(in);
 }
 float CONSCIENTIA::Cfloat(){
-  string rawstr = cstr();
+  string rawstr = Cstr();
   string::size_type sz;
   float in;
   in = stof(rawstr, &sz);
@@ -270,7 +270,7 @@ void CONSCIENTIA::Print(int pointer, string str){
           if(windows[pointer].border == false && windows[pointer].title == true){
             windows[pointer].cursorY++;
           }
-          clearWindow(pointer);
+          ClearWindow(pointer);
         }
       }
       a = a + 2;
@@ -285,7 +285,7 @@ void CONSCIENTIA::Print(int pointer, string str){
             if(windows[pointer].title == true){
               windows[pointer].cursorY++;
             }
-            clearWindow(pointer);
+            ClearWindow(pointer);
           }
         }
       }
@@ -295,7 +295,7 @@ void CONSCIENTIA::Print(int pointer, string str){
           windows[pointer].cursorY++;
           if(windows[pointer].cursorY >= windows[pointer].sizeY - 1){
             windows[pointer].cursorY = 1;
-            clearWindow(pointer);
+            ClearWindow(pointer);
           }
         }
       }
@@ -303,33 +303,33 @@ void CONSCIENTIA::Print(int pointer, string str){
       stringstream sstream;
       sstream << str[a];
       sstream >> character;
-      mvwprintw(windows[pointer].pointer, windows[pointer].cursorY, windows[pointer].cursorX, character.c_str());
+      mvwPrintw(windows[pointer].pointer, windows[pointer].cursorY, windows[pointer].cursorX, character.c_str());
       windows[pointer].cursorX++;
     }
   }
   if(autoRefresh == true){
-    update();
+    Update();
   }
 }
 void CONSCIENTIA::MPrint(int pointer, int x, int y, string str){
   windows[pointer].cursorX = x;
   windows[pointer].cursorY = y;
-  print(pointer, str);
+  Print(pointer, str);
 }
 /*-----CURRENT-----*/
 void CONSCIENTIA::CPrint(string str){
-  print(currentWindowPointer, str);
+  Print(currentWindowPointer, str);
 }
 void CONSCIENTIA::CMPrint(int x, int y, string str){
-  mprint(currentWindowPointer, x, y, str);
+  MPrint(currentWindowPointer, x, y, str);
 }
 /*-----FIND-----*/
 void CONSCIENTIA::FPrint(string name, string str){
-  print(findWindowPointer(name), str);
+  Print(FindWindowPointer(name), str);
 }
 void CONSCIENTIA::FMPrint(string name, int x, int y, string str){
-  int pointer = findWindowPointer(name);
-  mprint(pointer, x, y, str);
+  int pointer = FindWindowPointer(name);
+  MPrint(pointer, x, y, str);
 }
 /*>>>>>-----SYSTEM-----<<<<<*/
 /*>>>>>-----Update-----<<<<<*/
@@ -354,21 +354,21 @@ string CONSCIENTIA::Menu(string menuFileDirectory, int posX, int posY, int sizeX
 	bool run = true, update = true;
 	int in = -1;
 	menuHierarchy menuStruct;
-	menuStruct = loadMenuHierarchy(menuFileDirectory);
+	menuStruct = LUXLECTOR::LoadHierarchyFile(menuFileDirectory);
 	int windowPointer = windows.size();
 	int pageWidth, listWidth;
 	int currentPage = 0, currentList = 0, currentItem = 0;
-	createWindow(menuStruct.name, posX, posY, sizeX, sizeY, true, true);
-	setCurrentWindow(windowPointer);
+	GenorateWindow(menuStruct.name, posX, posY, sizeX, sizeY, true, true);
+	SetCurrentWindow(windowPointer);
 	while (run == true) {
 		if (update == true) {
 			update = false;
-			displayMenu(menuStruct, currentPage, currentList, currentItem);
-      drawBorder(currentWindowPointer, true);
-      drawTitle(currentWindowPointer);
-      CONSCIENTIA::update();
+			DisplayMenu(menuStruct, currentPage, currentList, currentItem);
+      //DrawBorder(currentWindowPointer, true);
+      //DrawTitle(currentWindowPointer);
+      Update();
 		}
-		in = gint();
+		in = Gint();
 		if (in == 'a' && currentList > 0) {
 			currentList--;
 			update = true;
@@ -418,20 +418,17 @@ string CONSCIENTIA::Menu(string menuFileDirectory, int posX, int posY, int sizeX
 			return("");
 		}
 		if (in == 13) {
-			terminateWindow(currentWindowPointer);
+			TerminateWindow(currentWindowPointer);
 			return(menuStruct.pages[currentPage].lists[currentList].items[currentItem]);
 		}
 	}
 	return("");
 }
 void CONSCIENTIA::DisplayMenu(menuHierarchy menu, int currentPage, int currentList, int currentItem) {
-	cclearWindow();
+	CClearWindow();
 	string v, h, i, line;
 	char vc, hc, ic;
 	stringstream vss, hss, iss;
-	//vc = char(179);
-  //hc = char(196);
-	//ic = char(193);
   vc = '|';
   hc = '-';
   ic = '+';
@@ -481,33 +478,33 @@ void CONSCIENTIA::DisplayMenu(menuHierarchy menu, int currentPage, int currentLi
 	x = 1;
 	y = 1;
 	for (int a = firstPage; a < pagesDisplayed + firstPage; a++) {
-		cmprint(x + findTextStart(menu.pages[a].name, pageWidth), y, menu.pages[a].name);
+		CMPrint(x + FindTextStart(menu.pages[a].name, pageWidth), y, menu.pages[a].name);
 		if (currentPage != a) {
-			cmprint(x + 1, y + 1, line);
+			CMPrint(x + 1, y + 1, line);
 		}
 		x = x + pageWidth;
 		if (a != pagesDisplayed - 1) {
-			cmprint(x, y, v);
-			cmprint(x, y + 1, i);
+			CMPrint(x, y, v);
+			CMPrint(x, y + 1, i);
 		}
 	}
 	x = 0;
 	y = y + 2;
 	for (int a = firstList; a < listsDisplayed + firstList; a++) {
-		cmprint(x + findTextStart("<" + menu.pages[currentPage].lists[a].name + ">", listWidth), y, "<" + menu.pages[currentPage].lists[a].name + ">");
+		CMPrint(x + FindTextStart("<" + menu.pages[currentPage].lists[a].name + ">", listWidth), y, "<" + menu.pages[currentPage].lists[a].name + ">");
 		yn = y + 1;
 		for (int b = firstItem; b < maxItemsDisplayed + firstItem && b < menu.pages[currentPage].lists[a].items.size(); b++) {
 			if (a == currentList && b == currentItem) {
-				cmprint(x + findTextStart(">" + menu.pages[currentPage].lists[a].items[b] + "<", listWidth), yn, ">" + menu.pages[currentPage].lists[a].items[b] + "<");
+				CMPrint(x + FindTextStart(">" + menu.pages[currentPage].lists[a].items[b] + "<", listWidth), yn, ">" + menu.pages[currentPage].lists[a].items[b] + "<");
 			}
 			else {
-				cmprint(x + findTextStart(menu.pages[currentPage].lists[a].items[b], listWidth), yn, menu.pages[currentPage].lists[a].items[b]);
+				CMPrint(x + FindTextStart(menu.pages[currentPage].lists[a].items[b], listWidth), yn, menu.pages[currentPage].lists[a].items[b]);
 			}
 			yn++;
 		}
 		x = x + listWidth;
 	}
-	update();
+	Update();
 }
 int CONSCIENTIA::FindTextStart(string str, int space) {
 	space = space / 2;
@@ -520,7 +517,7 @@ int CONSCIENTIA::FindTextStart(string str, int space) {
 /*>>>>>-----Loading Bars-----<<<<<*/
 int CONSCIENTIA::InitializeLoadingBar(string process) {
 	loadingBarPointers.push_back(windows.size());
-	createWindow(process, (windows[0].sizeX / 2) - (windows[0].sizeX / 4), (windows[0].sizeY / 2) - 1, (windows[0].sizeX / 2), 3, true, true);
+	GenorateWindow(process, (windows[0].sizeX / 2) - (windows[0].sizeX / 4), (windows[0].sizeY / 2) - 1, (windows[0].sizeX / 2), 3, true, true);
 	return(loadingBarPointers.size() - 1);
 }
 void CONSCIENTIA::LoadingBar(int index, double percent) {
@@ -528,16 +525,16 @@ void CONSCIENTIA::LoadingBar(int index, double percent) {
 	int loadingBarPointer = loadingBarPointers[index];
 	int size = windows[loadingBarPointer].sizeX - 2;
 	double blockWorth = (double)100 / (double)size;
-	clearWindow(loadingBarPointer);
+	ClearWindow(loadingBarPointer);
 	string bar = "";
 	while (percent > blockWorth) {
 		bar = bar + block;
 		percent = percent - blockWorth;
 	}
-	print(loadingBarPointer, bar);
+	Print(loadingBarPointer, bar);
 }
 void CONSCIENTIA::TerminateLoadingBar(int index) {
-	terminateWindow(loadingBarPointers[index]);
+	TerminateWindow(loadingBarPointers[index]);
 	loadingBarPointers.erase(loadingBarPointers.begin() + index);
 }
 /*=====>>>>>-----Input Funcitons-----<<<<<=====*/
