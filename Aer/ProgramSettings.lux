@@ -1,0 +1,7 @@
+#DATAFILE
+int devMode 1
+vector string programName NULL
+int width 1920
+int height 1080
+int versionMajor 0
+int versionMinor 0;
