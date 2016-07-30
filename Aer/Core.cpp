@@ -2,18 +2,16 @@
 #include <time.h>
 #include <conio.h>
 #include "Conscientia Files\Conscientia Headers.h"
-#include <SDL.h>
-#undef main
+#include "Aequus Files\Aequus Headers.h"
 #include "Aer.h"
 using namespace std;
 
-int main() {
+int main(int argc, char* argv[]) {
 	LOGGING::InitializeLogging();
-	CONSCIENTIA::SetConsoleName("Aer Weather");
+	AEQUUS::FullStatup();
 	AER::ProgramStartUp();
-	CONSCIENTIA::InitializeConscientia();
 	AER::RunProgram();
-	CONSCIENTIA::TerminateConscientia();
+	AEQUUS::FullShutDown();
 	LOGGING::TerminateLogging();
 	return(1);
 }

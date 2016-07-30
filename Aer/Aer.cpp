@@ -7,8 +7,10 @@
 #include <ctime>
 #include <conio.h>
 #include "Conscientia Files\Conscientia Headers.h"
+#include "Aequus Files\Aequus Headers.h"
 #include "Aer.h"
 using namespace std;
+using namespace AEQUUS;
 
 int currentLocation = 0;
 bool day = true;
@@ -367,123 +369,19 @@ void AER::LoadCurrentData()
 
 void AER::RunProgram()
 {
-	bool running = true;
 	int input = -1;
 	bool update = true, data = false;
 	if (updateData.data[1].stringVectorValue.size() > 0) {
 		data = true;
 	}
-	SetWindowLayout();
+	//SetWindowLayout();
 	if (data == true) {
 		LoadCurrentData();
 	}
-	while (running == true) {
-		if (update == true) {
-			update = false;
-			if (data == true) {
-				DrawData();
-			}
-			else if (data == false) {
-				int tempX, tempY;
-				CONSCIENTIA::FGetWindowSize("locationData", tempX, tempY);
-				CONSCIENTIA::FMPrint("locationData", CONSCIENTIA::FindTextStart("Please Enter A Location", tempX), 1, "Please Enter A Location");
-			}
-			/*Update*/
-			CONSCIENTIA::DrawBorder(1);
-			CONSCIENTIA::DrawBorder(2);
-			CONSCIENTIA::DrawBorder(3);
-			CONSCIENTIA::DrawBorder(4);
-			CONSCIENTIA::DrawBorder(5);
-			CONSCIENTIA::DrawBorder(6);
-			CONSCIENTIA::DrawTitle(4);
-			CONSCIENTIA::DrawTitle(5);
-			CONSCIENTIA::DrawTitle(6);
-			CONSCIENTIA::Update();
+	while (mainLoopQuit == false) {
+		while (SDL_PollEvent(&Event) != 0) {
 		}
-		input = CONSCIENTIA::Gint();
-		if (input == 27) {
-			string strInput = "";
-			int tempX, tempY;
-			CONSCIENTIA::GetWindowSize(0, tempX, tempY);
-			strInput = CONSCIENTIA::Menu("Menu.lux", (tempX / 3), (tempY / 2) - 5, (tempX / 3), 10);
-			if (strInput == "Quit") {
-				running = false;
-				LUXLECTOR::SaveDataFile("ProgramData.lux", updateData);
-			}
-			if (strInput == "Return") {
-				update = true;
-			}
-			if (strInput == "New Location") {
-				update = true;
-				NewLocation();
-				if (updateData.data[1].stringVectorValue.size() > 0) {
-					data = true;
-					LoadCurrentData();
-				}
-				else {
-					data = false;
-				}
-			}
-			if (strInput == "Delete Location") {
-				RemoveLocation();
-				update = true;
-				if (updateData.data[1].stringVectorValue.size() > 0) {
-					data = true;
-				}
-				else {
-					data = false;
-				}
-				if (data == true) {
-					LoadCurrentData();
-				}
-			}
-		}
-		if (input == 97 && day == true && data == true) {
-			update = true;
-			day = false;
-			currentForcast = 0;
-		}
-		if (input == 100 && day == false && data == true) {
-			update = true;
-			day = true;
-			currentForcast = 0;
-		}
-		if (input == 119 && currentForcast > 0 && data == true) {
-			update = true;
-			currentForcast--;
-		}
-		if (input == 115 && currentForcast < maxForcast && data == true) {
-			update = true;
-			currentForcast++;
-		}
-		if (input == 113 && currentLocation > 0 && data == true) {
-			update = true;
-			currentLocation--;
-			currentForcast = 0;
-			LoadCurrentData();
-		}
-		if (input == 101 && currentLocation < updateData.data[1].stringVectorValue.size() - 1 && data == true) {
-			update = true;
-			currentLocation++;
-			currentForcast = 0;
-			LoadCurrentData();
-		}
-		if (input == 114 && displayStartCurrent > 0 && data == true) {
-			displayStartCurrent--;
-			update = true;
-		}
-		if (input == 102 && data == true) {
-			displayStartCurrent++;
-			update = true;
-		}
-		if (input == 116 && displayStartForcast > 0 && data == true) {
-			displayStartForcast--;
-			update = true;
-		}
-		if (input == 103 && data == true) {
-			displayStartForcast++;
-			update = true;
-		}
+		Frame();
 	}
 }
 

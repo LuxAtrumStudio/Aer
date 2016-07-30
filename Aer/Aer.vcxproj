@@ -124,6 +124,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Aequus Files\Aequus Core.cpp" />
+    <ClCompile Include="Aequus Files\Font.cpp" />
+    <ClCompile Include="Aequus Files\Texture.cpp" />
+    <ClCompile Include="Aequus Files\Windows.cpp" />
     <ClCompile Include="Aer.cpp" />
     <ClCompile Include="Conscientia Files\Concero.cpp" />
     <ClCompile Include="Conscientia Files\Conscientia.cpp" />
@@ -132,6 +136,12 @@
     <ClCompile Include="Core.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Aequus Files\Aequus Core.h" />
+    <ClInclude Include="Aequus Files\Aequus Headers.h" />
+    <ClInclude Include="Aequus Files\Font.h" />
+    <ClInclude Include="Aequus Files\SDL Headers.h" />
+    <ClInclude Include="Aequus Files\Texture.h" />
+    <ClInclude Include="Aequus Files\Windows.h" />
     <ClInclude Include="Aer.h" />
     <ClInclude Include="Conscientia Files\Concero.h" />
     <ClInclude Include="Conscientia Files\Conscientia Headers.h" />
@@ -143,9 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Conscientia Files\GetPage.py" />
-    <None Include="GetPage.py" />
     <None Include="Menu.lux" />
     <None Include="ProgramData.lux" />
+    <None Include="ProgramSettings.lux" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Log.log" />

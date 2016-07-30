@@ -22,6 +22,15 @@
     <Filter Include="Conscientia Files\Source Files">
       <UniqueIdentifier>{a18fd741-10ad-4cee-97a0-3070bc1a9475}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Aequus Files">
+      <UniqueIdentifier>{86180ac4-d865-4ae9-a04b-3f6838aba895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aequus Files\Header Files">
+      <UniqueIdentifier>{25446378-fbf3-44c8-890d-18bc2e7c55e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aequus Files\Source Files">
+      <UniqueIdentifier>{635d1311-8144-4e16-ac5d-46d9d66e70fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp">
@@ -41,6 +50,18 @@
     </ClCompile>
     <ClCompile Include="Conscientia Files\LuxLector.cpp">
       <Filter>Conscientia Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Aequus Files\Aequus Core.cpp">
+      <Filter>Aequus Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Aequus Files\Font.cpp">
+      <Filter>Aequus Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Aequus Files\Texture.cpp">
+      <Filter>Aequus Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Aequus Files\Windows.cpp">
+      <Filter>Aequus Files\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,11 +89,26 @@
     <ClInclude Include="resource1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Aequus Files\Aequus Core.h">
+      <Filter>Aequus Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Aequus Files\Aequus Headers.h">
+      <Filter>Aequus Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Aequus Files\Font.h">
+      <Filter>Aequus Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Aequus Files\SDL Headers.h">
+      <Filter>Aequus Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Aequus Files\Texture.h">
+      <Filter>Aequus Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Aequus Files\Windows.h">
+      <Filter>Aequus Files\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GetPage.py">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="ProgramData.lux">
       <Filter>Resource Files</Filter>
     </None>
@@ -80,6 +116,9 @@
       <Filter>Conscientia Files\Source Files</Filter>
     </None>
     <None Include="Menu.lux">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ProgramSettings.lux">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
