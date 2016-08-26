@@ -2,6 +2,6 @@
 int devMode 1
 vector string programName Aer GUI
 int width 400
-int height 500
+int height 700
 int versionMajor 0
 int versionMinor 2;

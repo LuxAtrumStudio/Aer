@@ -125,7 +125,7 @@ void WINDOW::Focus()
 void WINDOW::Render()
 {
 	if (minimized != true) {
-		SDL_SetRenderDrawColor(rendererPointer, 0xFF, 0xFF, 0xFF, 0xFF);
+		//SDL_SetRenderDrawColor(rendererPointer, 255, 255, 255, 255);
 		SDL_RenderClear(rendererPointer);
 		for (unsigned int a = 0; a < textures.size(); a++) {
 			textures[a].Render();

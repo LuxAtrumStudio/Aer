@@ -131,7 +131,7 @@ bool TEXTURE::LoadButton(string text, string texturePath, double red, double gre
 	if (textureSurface == NULL) {
 		LOGGING::LogError("Failed to genorate surface from " + texturePath, "Texture.cpp/TEXTURE/LoadButton");
 	}
-	transferSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+	transferSurface = SDL_CreateRGBSurface(0, width, height * 4, 32, 0, 0, 0, 0);
 	SDL_BlitScaled(textureSurface, NULL, transferSurface, NULL);
 	SDL_FreeSurface(textureSurface);
 	textureSurface = transferSurface;
@@ -144,11 +144,11 @@ bool TEXTURE::LoadButton(string text, string texturePath, double red, double gre
 	int textWidth, textHeight;
 	TTF::GetTextSize(fontPointer, text, textWidth, textHeight);
 	bool shrink = false;
-	//while (textWidth > width || textHeight > height) {
-	//	shrink = true;
-	//	TTF::SetFontPoint(fontPointer, (TTF::fontList[fontPointer].point - 1));
-	//	TTF::GetTextSize(fontPointer, text, textWidth, textHeight);
-	//}
+	while (textWidth > width || textHeight > height) {
+		shrink = true;
+		TTF::SetFontPoint(fontPointer, (TTF::fontList[fontPointer].point - 1));
+		TTF::GetTextSize(fontPointer, text, textWidth, textHeight);
+	}
 	if (fill == true) {
 		if (shrink == false) {
 			while (textWidth < width || textHeight < height) {

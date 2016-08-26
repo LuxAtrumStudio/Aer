@@ -85,14 +85,15 @@ void AER::SetWindowLayout()
 {
 	int maxX = 0, maxY = 0;
 	/*Menu Bar*/
-	CONSCIENTIA::GetWindowSize(0, maxX, maxY);
-	CONSCIENTIA::GenorateWindow("currentTemp", 0, 0, 12, 3, true, false);
-	CONSCIENTIA::GenorateWindow("locationData", 12, 0, (maxX - 52), 3, true, false);
-	CONSCIENTIA::GenorateWindow("dateTime", (maxX - 40), 0, 40, 3, true, false);
+	TTF::SetFontWeight(0, "Light");
+	NewButton("Menu", "Textures/ButtonSheet2.png", 100, 50);
+	NewTexture("Textures/IconSheet.png");
+	window->textures[1].SetClip(0, 0, 128, 128);
+	SetPositional(1, 100, 100, 0.2, 0.2, 0, 0);
+	NewTexture("Textures/IconSheet.png");
+	window->textures[1].SetClip(128, 0, 128, 128);
+	SetPositional(2, 200, 0, 0.2, 0.2, 0, 0);
 	/*Core Windows*/
-	CONSCIENTIA::GenorateWindow("Current Weather Data", 0, 3, ((maxX / 10) * 4) - 1, maxY - 3, true, true);
-	CONSCIENTIA::GenorateWindow("Forcast Selection", ((maxX / 10) * 4) - 1, 3, ((maxX / 10) * 2) + 1, maxY - 3, true, true);
-	CONSCIENTIA::GenorateWindow("Forcasted Weather Data", (maxX / 10) * 6, 3, (maxX / 10) * 4, maxY - 3, true, true);
 }
 
 void AER::LoadJSONData()
@@ -315,12 +316,29 @@ string AER::ConvertVar(subVar var)
 	else if (var.name == "precipIntensity" || var.name == "precipIntensityMax") {
 		variable = var.strVar + " in/hr";
 	}
-	else if (var.name == "precipProbability" || var.name == "humidity" || var.name == "cloudCover" || var.name == "moonPhase") {
+	else if (var.name == "precipProbability" || var.name == "humidity" || var.name == "cloudCover") {
 		if (var.strVar == "0") {
 			variable = "0%";
 		}
 		else {
 			variable = to_string((var.doubleVar * (double)100)) + "%";
+		}
+	}
+	else if (var.name == "moonPhase") {
+		if (var.strVar == "0") {
+			variable = "0%";
+		}
+		else {
+			double phasePercent = var.doubleVar - 0.5;
+			if (phasePercent < 0) {
+				variable = "Waxing: " + to_string(((var.doubleVar * -1) * (double)50)) + "%";
+			}
+			else if (phasePercent > 0) {
+				variable = "Waning: " + to_string(((var.doubleVar * -1) * (double)50)) + "%";
+			}
+			else if (phasePercent == 0) {
+				variable = "Full Moon: 100%";
+			}
 		}
 	}
 	else if (var.name == "temperature" || var.name == "apparentTemperature" || var.name == "dewPoint" || var.name == "temperatureMin" || var.name == "temperatureMax" ||
@@ -374,11 +392,17 @@ void AER::RunProgram()
 	if (updateData.data[1].stringVectorValue.size() > 0) {
 		data = true;
 	}
-	//SetWindowLayout();
+	SetWindowLayout();
 	if (data == true) {
 		LoadCurrentData();
 	}
 	while (mainLoopQuit == false) {
+		if (Event.type = SDL_KEYDOWN) {
+			if (Event.key.state == SDL_PRESSED) {
+				if (Event.key.keysym.sym == SDLK_ESCAPE) {
+				}
+			}
+		}
 		while (SDL_PollEvent(&Event) != 0) {
 		}
 		Frame();
