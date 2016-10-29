@@ -1,10 +1,9 @@
-#include "aer.h"
+#include "aer_files/aer_headers.h"
 #include <aequus.h>
 int main() {
   pessum::InitializePessumComponents();
   aequus::framework::SdlStartUp();
-  aequus::video::CreateWindow("Aer", 400, 600);
-  aequus::video::SetIcon("resources/images/weather_icons/sun-cloud.png");
+  aer::setup::LoadWindowLayout();
   aequus::framework::TerminateSdl();
   pessum::TerminatePessumComponents();
 }

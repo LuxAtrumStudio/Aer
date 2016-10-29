@@ -16,7 +16,6 @@ $(PROGRAM_NAME): $(OBJ_FILES) $(wildcard */*.o) $(wildcard */*/*.o) $(wildcard *
 	setterm -default
 
 %.o: %.cpp
-	@echo Hello Again
 	g++ $(COMPILER_FLAGS) -o $(notdir $*).o $*.cpp
 
 .PHONY : top_obj
@@ -26,6 +25,8 @@ top_obj:$(OBJ_FILES)
 
 .PHONY : subsystem
 subsystem:
+	setterm -foreground blue
+	cd aer_files && $(MAKE)
 	setterm -default
 
 .PHONY : clean
@@ -53,3 +54,7 @@ compress:
 .PHONY : lib
 lib:
 	ar rcs lib$(PROGRAM_NAME).a $(TOTAL_OBJ_FILES)
+
+.PHONY : log
+log:
+	less log_output.log

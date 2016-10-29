@@ -1,31 +1,20 @@
-
-#include "aer.h"
+#include "aer_headers.h"
 #include <aequus.h>
 #include <ctime>
+#include <iostream>
 #include <string>
-namespace aer {
-std::string LocationAPIKey = "AIzaSyA5f4p18rQqX_7aObYpLJJFV4iqU2-cmf4";
-std::string WeatherAPIKey = "9c9c48f9ab5717ed899e8b6d730883c6";
 
-int currentlocation = 0;
-bool day = true;
-pessum::luxreader::DataFile updatedata;
-std::string locationdata, weatherdata;
-int currentforcast = 0, maxforcast = 0;
-int displaystartcurrent = 0, displaystartforcast = 0;
-}
-
-void aer::GetLocationData(std::string location) {
+void aer::data::GetLocationData(std::string location) {
   std::vector<std::string> scriptdata = {
       "resources/scripts/get_page.py",
       "https://maps.googleapis.com/maps/api/geocode/"
       "json?address=" +
-          location + "&key=" + LocationAPIKey,
+          location + "&key=" + aer::LocationAPIKey,
       "resources/location/" + location + ".json"};
   pessum::rest::RunScript(scriptdata);
 }
 
-void aer::GetWeatherData(double lat, double lon, std::string location) {
+void aer::data::GetWeatherData(double lat, double lon, std::string location) {
   std::vector<std::string> scriptdata = {
       "resources/scripts/get_page.py",
       "https://api.darksky.net/forecast/" + WeatherAPIKey + "/" +
@@ -34,13 +23,7 @@ void aer::GetWeatherData(double lat, double lon, std::string location) {
   pessum::rest::RunScript(scriptdata);
 }
 
-void aer::SetUp() {}
-
-void aer::LoadWindowLayout() {}
-
-void aer::DrawData() {}
-
-std::string aer::GetDate(tm date) {
+std::string aer::data::GetDate(tm date) {
   std::string dateString = "";
   std::string wDays[7] = {"Sunday",   "Monday", "Tuesday", "Wensday",
                           "Thrusday", "Friday", "Saturday"};
@@ -53,7 +36,7 @@ std::string aer::GetDate(tm date) {
   return (dateString);
 }
 
-std::string aer::GetTime(tm date, bool meridies, bool seconds) {
+std::string aer::data::GetTime(tm date, bool meridies, bool seconds) {
   std::string timestr;
   bool pm = false;
   if (meridies == true && date.tm_hour > 12) {
@@ -80,7 +63,7 @@ std::string aer::GetTime(tm date, bool meridies, bool seconds) {
   return (timestr);
 }
 
-std::string aer::ConvertVartName(std::string var) {
+std::string aer::data::ConvertVartName(std::string var) {
   std::string name;
   name = char(int(var[0]) - 32);
   for (unsigned a = 1; a < var.size() - 1; a++) {
@@ -95,7 +78,7 @@ std::string aer::ConvertVartName(std::string var) {
   return (name);
 }
 
-std::string aer::ConvertVar(pessum::rest::Variable var) {
+std::string aer::data::ConvertVar(pessum::rest::Variable var) {
   std::string variable = "";
   if (var.variablename == "time") {
     time_t dataTime = (time_t)var.intvalue;
@@ -184,7 +167,7 @@ std::string aer::ConvertVar(pessum::rest::Variable var) {
   return (variable);
 }
 
-void aer::LoadCurrentData() {
+void aer::data::LoadCurrentData() {
   locationdata =
       "resources/location/" +
       updatedata.datafilevariables[1].stringvectorvalues[currentlocation] +
@@ -195,6 +178,5 @@ void aer::LoadCurrentData() {
       ".json";
 }
 
-void aer::RunProgram() {}
-void NewLocation() {}
-void RemoveLocation() {}
+void aer::data::NewLocation() {}
+void aer::data::RemoveLocation() {}

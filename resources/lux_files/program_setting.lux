@@ -1,0 +1,6 @@
+#DATAFILE
+string name Aer
+string icon resources/images/weather_icons/sun-cloud.png
+int width 100
+int height 100
+vector int version 1 0 2
