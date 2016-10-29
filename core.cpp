@@ -4,6 +4,7 @@ int main() {
   pessum::InitializePessumComponents();
   aequus::framework::SdlStartUp();
   aer::setup::LoadWindowLayout();
+  aer::RunProgram();
   aequus::framework::TerminateSdl();
   pessum::TerminatePessumComponents();
 }

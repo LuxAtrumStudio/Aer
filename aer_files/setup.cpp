@@ -76,6 +76,11 @@ void aer::setup::LoadWindowLayout() {
                               programsettings.datafilevariables[2].intvalue,
                               programsettings.datafilevariables[3].intvalue);
   aequus::video::SetIcon(programsettings.datafilevariables[1].stringvalue);
+
+  aequus::video::NewObject();
+  pessum::logging::Log();
+  aequus::video::win->obj->CreateImgObj("ui_icons/back_arrow.png");
+  pessum::logging::Log();
 }
 
 void aer::setup::LoadJsonData() {

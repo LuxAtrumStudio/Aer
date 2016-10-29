@@ -18,4 +18,15 @@ int displaystartcurrent = 0, displaystartforcast = 0;
 
 void aer::DrawData() {}
 
-void aer::RunProgram() {}
+void aer::RunProgram() {
+  while (aequus::video::AllClose() == false) {
+    aequus::Frame();
+    if (aequus::input::events.size() > 0) {
+      if (aequus::input::events[0].type == aequus::input::KEYBOARD) {
+        if (aequus::input::events[0].key == int('q')) {
+          aequus::video::TerminateWindow();
+        }
+      }
+    }
+  }
+}
