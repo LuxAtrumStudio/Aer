@@ -1,5 +1,5 @@
 SUCCESS>>Opened log: log_output.log>>pessum_files/logging.cpp/InitializeLogging
-INFORMATION>>Sat Oct 29 10:51:57 2016>>TimeStamp
+INFORMATION>>Tue Nov  1 14:24:32 2016>>TimeStamp
 SUCCESS>>Initialized SDL>>aequus_files/framework/InitializeSdl
 SUCCESS>>Initialized SDL IMG>>aequus_files/framework/InitalizeImg
 SUCCESS>>Initialized SDL TTG>>aequus_files/framework/InitializeTtf
@@ -8,4 +8,3 @@ DATA>>SDL versions match: 2.0.4>>aequus_files/framework/CheckSdlVersions
 SUCCESS>>Created new SDL window: Aer>>aequus_files/video/window[Aer]/CreateWindow
 SUCCESS>>Create renderer>>aequus_files/video/window[Aer]/rendererCreateRenderer
 SUCCESS>>Set window icon to: resources/images/weather_icons/sun-cloud.png>>aequus_files/video/window[Aer]/SetIcon
-DEVCHECK>>NULL>>NULL
